@@ -1,4 +1,7 @@
+import 'package:event_management_1/controll/state/list_user_provide.dart';
+import 'package:event_management_1/model/bottom_menu.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MainApp());
@@ -9,11 +12,12 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context)=>ListUserProvider()),
+      ],
+      child: MaterialApp(
+        home: BottomMenu()
       ),
     );
   }
