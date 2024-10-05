@@ -18,6 +18,7 @@ class BottomMenu extends StatefulWidget{
 class _BottomMenu extends State<BottomMenu> with TickerProviderStateMixin{
   
   MotionTabBarController? _motionTabBarController;
+  PageController _pageController = PageController();
 
   @override
   void initState() {
@@ -33,20 +34,26 @@ class _BottomMenu extends State<BottomMenu> with TickerProviderStateMixin{
   void dispose() {
     super.dispose();
     _motionTabBarController!.dispose();
+    _pageController.dispose();
   }
   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       
-      body: IndexedStack(
-            index: _motionTabBarController!.index,
-            children: [
-              ListUserPage(),
-              StatisticalView(),
-              QRViewPage()
-            ],
-          ),
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() {
+            _motionTabBarController!.index = index;
+          });
+        },
+        children: [
+          ListUserPage(),
+          StatisticalView(),
+          QRViewPage(),
+        ],
+      ),
 
       bottomNavigationBar: MotionTabBar(
         controller: _motionTabBarController,
@@ -67,6 +74,7 @@ class _BottomMenu extends State<BottomMenu> with TickerProviderStateMixin{
         onTabItemSelected: (int value) {
             setState(() {
               _motionTabBarController!.index = value;
+              _pageController.jumpToPage(value);
             });
           },
       ),

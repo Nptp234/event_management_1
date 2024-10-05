@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -57,6 +59,7 @@ class _QRView extends State<QRViewPage>{
       setState(() {
         result = scanData;
       });
+      log("${result!.code}");
     });
   }
 
