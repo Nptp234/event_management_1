@@ -9,7 +9,7 @@ class ListUserProvider with ChangeNotifier{
 
   void setList(List<UserModel> lst) {
     _lstUser = lst;
-    _filteredUsers.clear();
+    _filteredUsers = lst;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       notifyListeners();
     });

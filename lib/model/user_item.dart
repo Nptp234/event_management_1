@@ -15,15 +15,13 @@ class UserItem extends StatefulWidget{
 
 class _UserItem extends State<UserItem>{
 
-  UserModel? user;
   IconData? iconCheck;
   IconData square_outlined = Icons.square_outlined;
   IconData check_box_outlined = Icons.check_box_outlined;
 
   @override
   void initState() {
-    user = widget.user;
-    if(user!.status=="Checked"){
+    if(widget.user.status=="Checked"){
       iconCheck = check_box_outlined;
     }else{iconCheck = square_outlined;}
     super.initState();
@@ -53,17 +51,17 @@ class _UserItem extends State<UserItem>{
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // 
-                Text(user!.username, style: const TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold), maxLines: 1, textAlign: TextAlign.left,),
+                Text(widget.user.username, style: const TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold), maxLines: 1, textAlign: TextAlign.left,),
                 const SizedBox(height: 7,),
                 // 
-                Text("Email: ${user!.email}", style: const TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.normal), maxLines: 2, textAlign: TextAlign.left,),
+                Text("Email: ${widget.user.email}", style: const TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.normal), maxLines: 2, textAlign: TextAlign.left,),
                 const SizedBox(height: 7,),
                 // 
-                Text("Số điện thoại: ${user!.phone}", style: const TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.normal), maxLines: 1, textAlign: TextAlign.left,),
+                Text("Số điện thoại: ${widget.user.phone}", style: const TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.normal), maxLines: 1, textAlign: TextAlign.left,),
                 const SizedBox(height: 7,),
                 // 
                 const SizedBox(height: 10,),
-                Text(user!.status, style: TextStyle(fontSize: 15, color: widget.colorState, fontWeight: FontWeight.bold), maxLines: 1, textAlign: TextAlign.left,),
+                Text(widget.user.status, style: TextStyle(fontSize: 15, color: widget.colorState, fontWeight: FontWeight.bold), maxLines: 1, textAlign: TextAlign.left,),
               ],
             ),
           ),
@@ -73,13 +71,13 @@ class _UserItem extends State<UserItem>{
                 setState(() {
                   iconCheck=check_box_outlined;
                   widget.user.status=="Checked";
-                  user!.status=="Checked";
+                  widget.user.status=="Checked";
                 });
               }else{
                 setState(() {
                   iconCheck=square_outlined;
                   widget.user.status=="UnCheck";
-                  user!.status=="UnCheck";
+                  widget.user.status=="UnCheck";
                 });
               }
             }, 
