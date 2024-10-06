@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:event_management_1/controll/data/fetch_data.dart';
 import 'package:event_management_1/controll/state/list_user_provide.dart';
 import 'package:event_management_1/data/model/user_model.dart';
@@ -26,6 +28,23 @@ class ListUserPage extends StatefulWidget{
 }
 
 class _ListUserPage extends State<ListUserPage>{
+
+  Future<void> _onRefresh(BuildContext context) async{
+    try{
+      bool fetchSuccess = await fetchData(context);
+      if (!fetchSuccess) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Không thể tải dữ liệu. Vui lòng thử lại.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+    catch(e){
+      throw Exception(e);
+    }
+  }
 
   @override
   void initState() {
@@ -65,7 +84,7 @@ class _ListUserPage extends State<ListUserPage>{
   Widget _body(BuildContext context){
     return RefreshIndicator(
       onRefresh: (){
-        return fetchData(context);
+        return _onRefresh(context);
       },
       child: Container(
           width: getMainWidth(context),

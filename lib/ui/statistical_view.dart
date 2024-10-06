@@ -59,8 +59,9 @@ class _StatisticalView extends State<StatisticalView>{
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Tổng số người tham gia: $total", style: TextStyle(fontSize: 20, color: Colors.black),),
-                    Text("Tổng số người đã quét mã: $totalScanned", style: TextStyle(fontSize: 20, color: Colors.black),),
+                    Text("Tổng số người tham gia: $total", style: TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.bold),),
+                    Text("Tổng số người đã quét mã: $totalScanned", style: TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.bold),),
+                    Text("Tổng số người chưa quét mã: ${total-totalScanned}", style: TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.bold),),
                   ],
                 )
               ),

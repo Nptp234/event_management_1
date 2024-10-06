@@ -1,4 +1,6 @@
 
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:developer';
 
 import 'package:event_management_1/controll/state/list_user_provide.dart';
@@ -70,7 +72,7 @@ class _UserItem extends State<UserItem>{
 
   @override
   void initState() {
-    
+    iconCheck = widget.user.status == userState(1) ? check_box_outlined : square_outlined;
     super.initState();
   }
 
