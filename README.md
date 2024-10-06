@@ -13,3 +13,7 @@ Giao diện thống kê
 ![59010734335361-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/72ec22c5-4d09-4fba-a0f3-76462fa08e9e)
 
 Giao diện quét QR
+
+
+https://github.com/user-attachments/assets/85782a8e-38ae-40e6-8504-add427408c82
+
