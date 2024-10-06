@@ -1,4 +1,8 @@
+import 'package:event_management_1/controll/state/statistic_provider.dart';
+import 'package:event_management_1/data/model/statistic_model.dart';
 import 'package:event_management_1/data/model/user_model.dart';
+import 'package:event_management_1/model/calculate_statistic_value.dart';
+import 'package:event_management_1/model/const.dart';
 import 'package:flutter/material.dart';
 
 class ListUserProvider with ChangeNotifier{
@@ -21,6 +25,14 @@ class ListUserProvider with ChangeNotifier{
     notifyListeners();
   }
 
+  void updateUser(UserModel userNew){
+    int index = _lstUser.indexWhere((user) => user.phone == userNew.phone);
+    if (index != -1) {
+      _lstUser[index] = userNew;
+      notifyListeners();
+    }
+  }
+
   void filterList(String query) {
     if (query.isNotEmpty) {
       // _filteredUsers = _lstUser
@@ -36,4 +48,5 @@ class ListUserProvider with ChangeNotifier{
     }
     notifyListeners();
   }
+
 }

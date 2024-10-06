@@ -1,7 +1,9 @@
 
+import 'package:event_management_1/controll/state/list_user_provide.dart';
 import 'package:event_management_1/data/model/user_model.dart';
 import 'package:event_management_1/model/const.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class UserItem extends StatefulWidget{
 
@@ -65,23 +67,28 @@ class _UserItem extends State<UserItem>{
               ],
             ),
           ),
-          IconButton(
-            onPressed: (){
-              if(iconCheck==square_outlined){
-                setState(() {
-                  iconCheck=check_box_outlined;
-                  widget.user.status="Checked";
-                  widget.colorState = colorState("Checked");
-                });
-              }else{
-                setState(() {
-                  iconCheck=square_outlined;
-                  widget.user.status="UnCheck";
-                  widget.colorState = colorState("UnCheck");
-                });
-              }
-            }, 
-            icon: Icon(iconCheck, color: mainColor, size: 25,)
+          Consumer<ListUserProvider>(
+            builder: (context, value, child) {
+              return IconButton(
+                onPressed: (){
+                  if(iconCheck==square_outlined){
+                    setState(() {
+                      iconCheck=check_box_outlined;
+                      widget.user.status="Checked";
+                      widget.colorState = colorState("Checked");
+                    });
+                  }else{
+                    setState(() {
+                      iconCheck=square_outlined;
+                      widget.user.status="UnCheck";
+                      widget.colorState = colorState("UnCheck");
+                    });
+                  }
+                  value.updateUser(widget.user);
+                }, 
+                icon: Icon(iconCheck, color: mainColor, size: 25,)
+              );
+            },
           ),
         ],
       )

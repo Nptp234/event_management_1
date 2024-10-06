@@ -41,18 +41,20 @@ class _BottomMenu extends State<BottomMenu> with TickerProviderStateMixin{
   Widget build(BuildContext context) {
     return Scaffold(
       
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _motionTabBarController!.index = index;
-          });
-        },
-        children: [
-          ListUserPage(),
-          StatisticalView(),
-          QRViewPage(),
-        ],
+      body: SafeArea(
+        child: PageView(
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() {
+              _motionTabBarController!.index = index;
+            });
+          },
+          children: [
+            ListUserPage(),
+            StatisticalView(),
+            QRViewPage(),
+          ],
+        ),
       ),
 
       bottomNavigationBar: MotionTabBar(

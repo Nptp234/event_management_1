@@ -1,5 +1,7 @@
 import 'package:event_management_1/controll/state/list_user_provide.dart';
+import 'package:event_management_1/controll/state/statistic_provider.dart';
 import 'package:event_management_1/model/bottom_menu.dart';
+import 'package:event_management_1/ui/wellcome_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,9 +17,10 @@ class MainApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context)=>ListUserProvider()),
+        ChangeNotifierProvider(create: (context)=>StatisticProvider()),
       ],
-      child: MaterialApp(
-        home: BottomMenu()
+      child: const MaterialApp(
+        home: WelcomeScreen()
       ),
     );
   }
