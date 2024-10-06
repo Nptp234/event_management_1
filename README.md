@@ -6,7 +6,7 @@ Giao diện chào mừng (tải dữ liệu)
 
 Giao diện danh sách người tham gia
 
-![5901073899984-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/cf70c3e9-096f-4944-8629-bc1084313f87)
+![5901648689766-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/44720596-f1fd-40d6-8600-5274344c52cd)
 
 Giao diện thống kê
 
