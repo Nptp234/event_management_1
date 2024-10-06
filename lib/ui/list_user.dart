@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:event_management_1/controll/data/fetch_data.dart';
 import 'package:event_management_1/controll/state/list_user_provide.dart';
-import 'package:event_management_1/data/model/user_model.dart';
 import 'package:event_management_1/model/const.dart';
 import 'package:event_management_1/model/event_filter_bar.dart';
 import 'package:event_management_1/model/search_bar.dart';

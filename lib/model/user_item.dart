@@ -1,6 +1,7 @@
 
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:event_management_1/controll/state/list_user_provide.dart';
@@ -36,20 +37,21 @@ class _UserItem extends State<UserItem>{
     });
     
     try {
-      widget.user.status = widget.user.status == userState(1) ? userState(2) : userState(1);
-      bool isUpdateApi = await userApi.updateStatusUser(widget.user);
+      final updatedStatus = widget.user.status == userState(1) ? userState(2) : userState(1);
+      widget.user.status = updatedStatus;
+
+      bool isUpdateApi = await userApi.updateStatusUser(widget.user)
+        .timeout(const Duration(seconds: 35), onTimeout: () {
+        throw TimeoutException("Thời gian chờ quá lâu. Vui lòng thực hiện lại sau.");
+      });
+      
+      
 
       if (isUpdateApi) {
         setState(() {
-          if (iconCheck == square_outlined) {
-            iconCheck = check_box_outlined;
-            widget.user.status = userState(1); //Checked
-            widget.colorState = colorState(userState(1));
-          } else {
-            iconCheck = square_outlined;
-            widget.user.status = userState(2); //UnCheck
-            widget.colorState = colorState(userState(2));
-          }
+          iconCheck = updatedStatus == userState(1) ? check_box_outlined : square_outlined;
+          widget.colorState = colorState(updatedStatus);
+          widget.user.status = updatedStatus; 
         });
         value.updateUser(widget.user); 
       } else {
