@@ -57,7 +57,7 @@ class _UserItem extends State<UserItem>{
                 Text("Email: ${widget.user.email}", style: const TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.normal), maxLines: 2, textAlign: TextAlign.left,),
                 const SizedBox(height: 7,),
                 // 
-                Text("Số điện thoại: ${widget.user.phone}", style: const TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.normal), maxLines: 1, textAlign: TextAlign.left,),
+                Text("SDT: ${widget.user.phone}", style: const TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.normal), maxLines: 1, textAlign: TextAlign.left,),
                 const SizedBox(height: 7,),
                 // 
                 const SizedBox(height: 10,),
@@ -70,14 +70,14 @@ class _UserItem extends State<UserItem>{
               if(iconCheck==square_outlined){
                 setState(() {
                   iconCheck=check_box_outlined;
-                  widget.user.status=="Checked";
-                  widget.user.status=="Checked";
+                  widget.user.status="Checked";
+                  widget.colorState = colorState("Checked");
                 });
               }else{
                 setState(() {
                   iconCheck=square_outlined;
-                  widget.user.status=="UnCheck";
-                  widget.user.status=="UnCheck";
+                  widget.user.status="UnCheck";
+                  widget.colorState = colorState("UnCheck");
                 });
               }
             }, 

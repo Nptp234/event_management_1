@@ -23,9 +23,14 @@ class ListUserProvider with ChangeNotifier{
 
   void filterList(String query) {
     if (query.isNotEmpty) {
-      _filteredUsers = _lstUser
-          .where((user) => user.username.toLowerCase().contains(query.toLowerCase()))
-          .toList();
+      // _filteredUsers = _lstUser
+      //     .where((user) => user.username.toLowerCase().contains(query.toLowerCase()))
+      //     .toList();
+       _filteredUsers = _lstUser.where((user) {
+        return user.username.toLowerCase().contains(query.toLowerCase()) ||
+              user.phone.toLowerCase().contains(query.toLowerCase()) ||
+              user.email.toLowerCase().contains(query.toLowerCase());
+      }).toList();
     } else {
       _filteredUsers.clear();
     }

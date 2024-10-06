@@ -10,13 +10,13 @@ class ListUserPage extends StatefulWidget{
   ListUserPage({super.key});
 
   final List<UserModel> lst = [
-    UserModel(username: 'Phuoc1', phone: '0123456789', email: 'phuoc@gmail.com', status: 'Checked'),
-    UserModel(username: 'Phuoc2', phone: '0123456789', email: 'phuoc@gmail.com', status: 'Checked'),
-    UserModel(username: 'Phuoc3', phone: '0123456789', email: 'phuoc@gmail.com', status: 'Checked'),
-    UserModel(username: 'Phuoc4', phone: '0123456789', email: 'phuoc@gmail.com', status: 'Checked'),
-    UserModel(username: 'Phuoc5', phone: '0123456789', email: 'phuoc@gmail.com', status: 'UnCheck'),
-    UserModel(username: 'Phuoc6', phone: '0123456789', email: 'phuoc@gmail.com', status: 'Checked'),
-    UserModel(username: 'Phuoc7', phone: '0123456789', email: 'phuoc@gmail.com', status: 'UnCheck'),
+    UserModel(username: 'Phuoc1', phone: '0123456788', email: 'phuoc1@gmail.com', status: 'Checked'),
+    UserModel(username: 'Phuoc2', phone: '0123456777', email: 'phuoc2@gmail.com', status: 'Checked'),
+    UserModel(username: 'Phuoc3', phone: '0123456666', email: 'phuoc3@gmail.com', status: 'Checked'),
+    UserModel(username: 'Phuoc4', phone: '0123455555', email: 'phuo4@gmail.com', status: 'Checked'),
+    UserModel(username: 'Phuoc5', phone: '0123444444', email: 'phuoc5@gmail.com', status: 'UnCheck'),
+    UserModel(username: 'Phuoc6', phone: '0123333333', email: 'phuoc6@gmail.com', status: 'Checked'),
+    UserModel(username: 'Phuoc7', phone: '0122222222', email: 'phuoc7@gmail.com', status: 'UnCheck'),
   ];
 
   @override
