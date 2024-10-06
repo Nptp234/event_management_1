@@ -1,9 +1,18 @@
 import 'dart:async';
 
+import 'package:event_management_1/controll/data/fetch_data.dart';
+import 'package:event_management_1/controll/state/list_event_provider.dart';
+import 'package:event_management_1/controll/state/list_user_provide.dart';
+import 'package:event_management_1/data/api/event_api.dart';
+import 'package:event_management_1/data/api/user_api.dart';
+import 'package:event_management_1/data/model/event_model.dart';
+import 'package:event_management_1/data/model/user_model.dart';
 import 'package:event_management_1/model/bottom_menu.dart';
 import 'package:event_management_1/model/const.dart';
+import 'package:event_management_1/model/event_filter_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -13,10 +22,12 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
+
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 10), () {
+    Timer(const Duration(seconds: 1), () async{
+      await fetchData(context);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(

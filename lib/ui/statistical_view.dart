@@ -31,7 +31,7 @@ class _StatisticalView extends State<StatisticalView>{
     return Consumer<ListUserProvider>(
       builder: (context, value, child) {
         int total = value.lstUser.length;
-        int totalScanned = value.lstUser.where((user) => user.status == "Checked").length;
+        int totalScanned = value.lstUser.where((user) => user.status == userState(1)).length;
         
         return Container(
           width: getMainWidth(context),
