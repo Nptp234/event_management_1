@@ -33,7 +33,7 @@ class StatisticProvider with ChangeNotifier{
     
     Set<String> uniqueStates = <String>{};
     for (var user in lstUser) {
-      uniqueStates.add(user.status);
+      uniqueStates.add(user.status!);
     }
 
     for(var state in uniqueStates){

@@ -7,8 +7,8 @@ Map<String, double> _values = {
 
 void setValueList(List<UserModel> lst){
   _values.updateAll((key, value) => 0);
-  for(var task in lst){
-    String state = task.status;
+  for(var user in lst){
+    String state = user.status!;
     switch (state) {
       case "Checked":
         _values["Checked"] = (_values["Checked"] ?? 0) + 1;

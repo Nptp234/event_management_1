@@ -28,7 +28,7 @@ class _SearchBarModel extends State<SearchBarModel>{
                 padding: const WidgetStatePropertyAll<EdgeInsets>(EdgeInsets.all(10)),
                 backgroundColor: const WidgetStatePropertyAll<Color>(Colors.white),
                 onChanged: (value){
-                  provider.filterList(value);
+                  provider.filterListSearch(value);
                 },
                 leading: const Icon(Icons.search),
 

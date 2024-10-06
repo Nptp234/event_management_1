@@ -53,7 +53,7 @@ class _UserItem extends State<UserItem>{
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // 
-                Text(widget.user.username, style: const TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold), maxLines: 1, textAlign: TextAlign.left,),
+                Text(widget.user.fullname!, style: const TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold), maxLines: 1, textAlign: TextAlign.left,),
                 const SizedBox(height: 7,),
                 // 
                 Text("Email: ${widget.user.email}", style: const TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.normal), maxLines: 2, textAlign: TextAlign.left,),
@@ -63,7 +63,7 @@ class _UserItem extends State<UserItem>{
                 const SizedBox(height: 7,),
                 // 
                 const SizedBox(height: 10,),
-                Text(widget.user.status, style: TextStyle(fontSize: 15, color: widget.colorState, fontWeight: FontWeight.bold), maxLines: 1, textAlign: TextAlign.left,),
+                Text(widget.user.status!, style: TextStyle(fontSize: 15, color: widget.colorState, fontWeight: FontWeight.bold), maxLines: 1, textAlign: TextAlign.left,),
               ],
             ),
           ),

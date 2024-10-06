@@ -51,7 +51,7 @@ class _StatisticalView extends State<StatisticalView>{
               ),
               SizedBox(
                 width: getMainWidth(context),
-                child: Text("Chi tiết thống kê", style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),)
+                child: Text("Chi tiết thống kê cho sự kiện '${value.eventName}'", style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),)
               ),const SizedBox(height: 10,),
               SizedBox(
                 width: getMainWidth(context),
