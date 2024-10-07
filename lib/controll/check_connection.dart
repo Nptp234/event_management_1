@@ -32,14 +32,31 @@ class ConnectivityService {
   final UserApi userApi = UserApi();
   bool _hasInitialCheckRun = false;
 
+  int _retryCount = 0;
+  final int _maxRetries = 3;
+
   void monitorConnection(BuildContext context) {
     onConnectivityChanged.listen(
       (result) async{
         if(_hasInitialCheckRun){
           bool isConnect = await checkInternetConnection();
           if(isConnect){
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Đã có mạng trở lại, quá trình đồng bộ sẽ tự động bắt đầu!'),
+                backgroundColor: Colors.red,
+                padding: EdgeInsets.only(bottom: 30, left: 10, right: 10),
+              ),
+            );
             await _actionWhenHaveConnect(context);
           }else{
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Mất kết nối, sẽ tự động chuyển sang sử dụng lưu trữ cục bộ!'),
+                backgroundColor: Colors.red,
+                padding: EdgeInsets.only(bottom: 30, left: 10, right: 10),
+              ),
+            );
             await _actionWhenLostConnect(context);
           }
         }else{
@@ -50,15 +67,6 @@ class ConnectivityService {
   }
 
   Future<void> _actionWhenLostConnect(BuildContext context) async{
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Mất kết nối, sẽ tự động chuyển sang sử dụng lưu trữ cục bộ!'),
-        backgroundColor: Colors.red,
-        padding: EdgeInsets.only(bottom: 30, left: 10, right: 10),
-      ),
-    );
-
     try{
       final userProvider = Provider.of<ListUserProvider>(context, listen: false);
       final eventProvider = Provider.of<ListEventProvider>(context, listen: false);
@@ -71,34 +79,34 @@ class ConnectivityService {
   }
 
   Future<void> _actionWhenHaveConnect(BuildContext context) async{
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Đã có mạng trở lại, quá trình đồng bộ sẽ tự động bắt đầu!'),
-        backgroundColor: Colors.red,
-        padding: EdgeInsets.only(bottom: 30, left: 10, right: 10),
-      ),
-    );
-
     try{
-      bool isAsync = await asyncData(context);
-      if (isAsync) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Đã đồng bộ thành công!'),
-            backgroundColor: mainColor,
-            padding: EdgeInsets.only(bottom: 30, left: 10, right: 10),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Đồng bộ thất bại, sẽ tự động đồng bộ lại sau 5 giây!'),
-            backgroundColor: Colors.red,
-          ),
-        );
-        await Future.delayed(const Duration(seconds: 5));
-        _actionWhenHaveConnect(context);
+      bool isConnect = await checkInternetConnection();
+      if(isConnect){
+        bool isAsync = await asyncData(context);
+        if (isAsync) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Đã đồng bộ thành công!'),
+              backgroundColor: mainColor,
+              padding: EdgeInsets.only(bottom: 30, left: 10, right: 10),
+            ),
+          );
+          await sqLiteHistory.clearHistory();
+          _retryCount = 0;
+        } else {
+          if(_retryCount < _maxRetries){
+            _retryCount++;
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Đồng bộ thất bại, sẽ tự động đồng bộ lại sau 5 giây!'),
+                backgroundColor: Colors.red,
+                padding: EdgeInsets.only(bottom: 30, left: 10, right: 10),
+              ),
+            );
+            await Future.delayed(const Duration(seconds: 5));
+            await _actionWhenHaveConnect(context);
+          }
+        }
       }
     }
     catch(e){
@@ -118,7 +126,7 @@ class ConnectivityService {
             isUpdate = updateSuccess;
           }
 
-          if (isUpdate) {
+          if (isUpdate || lstHistory.isEmpty) {
             bool fetchSuccess = await fetchData(context);
             return fetchSuccess;
           }

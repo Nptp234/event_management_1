@@ -1,5 +1,6 @@
 
 import 'package:event_management_1/controll/check_connection.dart';
+import 'package:event_management_1/controll/data/fetch_data.dart';
 import 'package:event_management_1/model/const.dart';
 import 'package:event_management_1/ui/list_user.dart';
 import 'package:event_management_1/ui/qr_view.dart';
@@ -57,6 +58,7 @@ class _BottomMenu extends State<BottomMenu> with TickerProviderStateMixin{
     );
     _checkConnect();
     _connectivityService.monitorConnection(context);
+    asyncDataOnlineOnly(context);
   }
 
   @override

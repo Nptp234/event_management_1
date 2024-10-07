@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:event_management_1/data/local/main_local.dart';
 import 'package:event_management_1/data/model/history_model.dart';
-import 'package:event_management_1/data/model/user_model.dart';
 
 class SQLiteHistory{
   final _sqlite = SQLiteMain();
@@ -45,6 +44,16 @@ class SQLiteHistory{
     catch(e){
       log("$e");
       return [];
+    }
+  }
+
+  Future<void> clearHistory() async{
+    try{
+      final db = await _sqlite.database;
+      await db.rawQuery('delete from history');
+    }
+    catch(e){
+      log("$e");
     }
   }
 }
