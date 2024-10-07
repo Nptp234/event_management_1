@@ -1,11 +1,13 @@
 
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:event_management_1/controll/check_connection.dart';
 import 'package:event_management_1/controll/state/list_user_provide.dart';
 import 'package:event_management_1/data/api/user_api.dart';
+import 'package:event_management_1/data/local/user_data_local.dart';
 import 'package:event_management_1/data/model/user_model.dart';
 import 'package:event_management_1/model/const.dart';
 import 'package:flutter/material.dart';
@@ -29,10 +31,11 @@ class _UserItem extends State<UserItem>{
   IconData check_box_outlined = Icons.check_box_outlined;
 
   final UserApi userApi = UserApi();
+  final SQLiteUser userSqlite = SQLiteUser();
 
   bool _isLoading = false; 
 
-  Future<bool> checkStatus(BuildContext context) async{
+  Future<bool> _checkStatus(BuildContext context) async{
     bool? result = await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
@@ -60,10 +63,8 @@ class _UserItem extends State<UserItem>{
     return result ?? false;
   }
 
-  Future<void> handleUpdateStatus(ListUserProvider value, BuildContext context) async {
-    bool canDo = await checkStatus(context);
-
-    if(canDo){
+  Future<void> _doUpdate(ListUserProvider value, BuildContext context) async{
+    try{
       setState(() {
         _isLoading = true;
       });
@@ -101,6 +102,69 @@ class _UserItem extends State<UserItem>{
         setState(() {
           _isLoading = false;
         });
+      }
+    }
+    catch(e){
+      log("$e");
+    }
+  }
+
+  Future<void> _doUpdateLocal(ListUserProvider value, BuildContext context) async{
+    try{
+      setState(() {
+        _isLoading = true;
+      });
+      
+      try {
+        final updatedStatus = widget.user.status == userState(1) ? userState(2) : userState(1);
+        widget.user.status = updatedStatus;
+
+        bool isUpdateLocal = await userSqlite.updateUser(widget.user)
+          .timeout(const Duration(seconds: 35), onTimeout: () {
+          throw TimeoutException("Thời gian chờ quá lâu. Vui lòng thực hiện lại sau.");
+        });
+        
+        
+
+        if (isUpdateLocal) {
+          setState(() {
+            iconCheck = updatedStatus == userState(1) ? check_box_outlined : square_outlined;
+            widget.colorState = colorState(updatedStatus);
+            widget.user.status = updatedStatus; 
+          });
+          value.updateUser(widget.user); 
+        } else {
+          throw Exception('Hiện tại không thể cập nhật thông tin.');
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Lỗi xảy ra khi cố gắng cập nhật người dùng: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        log("$e");
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+    catch(e){
+      log("$e");
+    }
+  }
+
+  Future<void> handleUpdateStatus(ListUserProvider value, BuildContext context) async {
+    bool canDo = await _checkStatus(context);
+    bool isConnect = await checkInternetConnection();
+
+    if(canDo){
+      if(isConnect){
+        await _doUpdate(value, context);
+      }
+      else{
+        await _doUpdateLocal(value, context);
       }
     }
   }

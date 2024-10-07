@@ -5,3 +5,4 @@ Future<bool> checkInternetConnection() async{
   var connectResult = await (Connectivity().checkConnectivity());
   return connectResult.contains(ConnectivityResult.mobile) || connectResult.contains(ConnectivityResult.wifi);
 }
+
