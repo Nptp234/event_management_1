@@ -81,36 +81,55 @@ class ConnectivityService {
     );
 
     try{
-      List<HistoryModel> lstHistory = await sqLiteHistory.getList();
-      bool isUpdate = false;
-      for(var history in lstHistory){
-        bool updateSuccess = await userApi.updateStatusUser(history.userId!, history.newStatus!);
-        isUpdate=updateSuccess;
-      }
-
-      if(isUpdate){
-        bool fetchSuccess = await fetchData(context);
-      
-        if (fetchSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Đã đồng bộ thành công!'),
-              backgroundColor: mainColor,
-              padding: EdgeInsets.only(bottom: 30, left: 10, right: 10),
-            ),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Không thể tải dữ liệu. Vui lòng thử lại.'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
+      bool isAsync = await asyncData(context);
+      if (isAsync) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Đã đồng bộ thành công!'),
+            backgroundColor: mainColor,
+            padding: EdgeInsets.only(bottom: 30, left: 10, right: 10),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Đồng bộ thất bại, sẽ tự động đồng bộ lại sau 5 giây!'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        await Future.delayed(const Duration(seconds: 5));
+        _actionWhenHaveConnect(context);
       }
     }
     catch(e){
       log("$e");
+    }
+  }
+
+  Future<bool> asyncData(BuildContext context) async{
+    try{
+      return await Future.any([
+        Future(() async {
+          List<HistoryModel> lstHistory = await sqLiteHistory.getList();
+          bool isUpdate = false;
+
+          for (var history in lstHistory) {
+            bool updateSuccess = await userApi.updateStatusUser(history.userId!, history.newStatus!);
+            isUpdate = updateSuccess;
+          }
+
+          if (isUpdate) {
+            bool fetchSuccess = await fetchData(context);
+            return fetchSuccess;
+          }
+          return false;
+        }),
+        Future.delayed(const Duration(seconds: 60), () => false)
+      ]);
+    }
+    catch(e){
+      log("$e");
+      return false;
     }
   }
 
