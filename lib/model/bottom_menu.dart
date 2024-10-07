@@ -1,4 +1,5 @@
 
+import 'package:event_management_1/controll/check_connection.dart';
 import 'package:event_management_1/model/const.dart';
 import 'package:event_management_1/ui/list_user.dart';
 import 'package:event_management_1/ui/qr_view.dart';
@@ -20,6 +21,32 @@ class _BottomMenu extends State<BottomMenu> with TickerProviderStateMixin{
   MotionTabBarController? _motionTabBarController;
   PageController _pageController = PageController();
 
+  final ConnectivityService _connectivityService = ConnectivityService();
+
+  Future<void> _checkConnect() async{
+    bool isCheck = await checkInternetConnection();
+    if(!isCheck){
+      await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Thông báo", style: TextStyle(fontWeight: FontWeight.bold),),
+          content: const Text('Lưu ý: Bạn đang ở chế độ offline mọi thay đổi sẽ được lưu trên điện thoại của bạn và sẽ được tự động đồng bộ sau khi kết nối khôi phục!',
+            style: TextStyle(fontWeight: FontWeight.bold),),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true); 
+              },
+              child: Text("Đồng ý", style: TextStyle(fontWeight: FontWeight.bold, color: mainColor),),
+            ),
+          ],
+        );
+      },
+    );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -28,6 +55,8 @@ class _BottomMenu extends State<BottomMenu> with TickerProviderStateMixin{
       length: 3, 
       vsync: this,
     );
+    _checkConnect();
+    _connectivityService.monitorConnection(context);
   }
 
   @override

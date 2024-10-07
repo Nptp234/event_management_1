@@ -56,15 +56,15 @@ class UserApi{
     }
   }
 
-  Future<bool> updateStatusUser(UserModel user) async{
+  Future<bool> updateStatusUser(String userId, String userStatus) async{
     try{
-      String recordId = await getRecordId(user.userId!);
+      String recordId = await getRecordId(userId);
       final body = {
         "records":[
             {
               "id": recordId,
               "fields":{
-                "isCheck": user.status
+                "isCheck": userStatus
               }
             }
         ]
