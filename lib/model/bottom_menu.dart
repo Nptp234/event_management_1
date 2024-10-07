@@ -21,6 +21,8 @@ class _BottomMenu extends State<BottomMenu> with TickerProviderStateMixin{
   MotionTabBarController? _motionTabBarController;
   PageController _pageController = PageController();
 
+  final ConnectivityService _connectivityService = ConnectivityService();
+
   Future<void> _checkConnect() async{
     bool isCheck = await checkInternetConnection();
     if(!isCheck){
@@ -54,6 +56,7 @@ class _BottomMenu extends State<BottomMenu> with TickerProviderStateMixin{
       vsync: this,
     );
     _checkConnect();
+    _connectivityService.monitorConnection(context);
   }
 
   @override
