@@ -10,6 +10,7 @@ import 'package:event_management_1/data/model/user_model.dart';
 import 'package:event_management_1/model/const.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quickalert/quickalert.dart';
 
 class UserItem extends StatefulWidget{
 
@@ -31,44 +32,76 @@ class _UserItem extends State<UserItem>{
 
   bool _isLoading = false; 
 
+  Future<bool> checkStatus(BuildContext context) async{
+    bool? result = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Xác nhận", style: TextStyle(fontWeight: FontWeight.bold),),
+          content: Text("Bạn muốn thay đổi trạng thái tham gia của '${widget.user.fullname}'?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); 
+              },
+              child: const Text("Hủy", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true); 
+              },
+              child: Text("Đồng ý", style: TextStyle(fontWeight: FontWeight.bold, color: mainColor),),
+            ),
+          ],
+        );
+      },
+    );
+
+    return result ?? false;
+  }
+
   Future<void> handleUpdateStatus(ListUserProvider value, BuildContext context) async {
-    setState(() {
-      _isLoading = true;
-    });
-    
-    try {
-      final updatedStatus = widget.user.status == userState(1) ? userState(2) : userState(1);
-      widget.user.status = updatedStatus;
+    bool canDo = await checkStatus(context);
 
-      bool isUpdateApi = await userApi.updateStatusUser(widget.user)
-        .timeout(const Duration(seconds: 35), onTimeout: () {
-        throw TimeoutException("Thời gian chờ quá lâu. Vui lòng thực hiện lại sau.");
-      });
-      
-      
-
-      if (isUpdateApi) {
-        setState(() {
-          iconCheck = updatedStatus == userState(1) ? check_box_outlined : square_outlined;
-          widget.colorState = colorState(updatedStatus);
-          widget.user.status = updatedStatus; 
-        });
-        value.updateUser(widget.user); 
-      } else {
-        throw Exception('Hiện tại không thể cập nhật thông tin.');
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Lỗi xảy ra khi cố gắng cập nhật người dùng: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-      log("$e");
-    } finally {
+    if(canDo){
       setState(() {
-        _isLoading = false;
+        _isLoading = true;
       });
+      
+      try {
+        final updatedStatus = widget.user.status == userState(1) ? userState(2) : userState(1);
+        widget.user.status = updatedStatus;
+
+        bool isUpdateApi = await userApi.updateStatusUser(widget.user)
+          .timeout(const Duration(seconds: 35), onTimeout: () {
+          throw TimeoutException("Thời gian chờ quá lâu. Vui lòng thực hiện lại sau.");
+        });
+        
+        
+
+        if (isUpdateApi) {
+          setState(() {
+            iconCheck = updatedStatus == userState(1) ? check_box_outlined : square_outlined;
+            widget.colorState = colorState(updatedStatus);
+            widget.user.status = updatedStatus; 
+          });
+          value.updateUser(widget.user); 
+        } else {
+          throw Exception('Hiện tại không thể cập nhật thông tin.');
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Lỗi xảy ra khi cố gắng cập nhật người dùng: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        log("$e");
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
