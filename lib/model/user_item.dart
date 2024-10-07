@@ -7,7 +7,9 @@ import 'dart:developer';
 import 'package:event_management_1/controll/check_connection.dart';
 import 'package:event_management_1/controll/state/list_user_provide.dart';
 import 'package:event_management_1/data/api/user_api.dart';
+import 'package:event_management_1/data/local/history_data_local.dart';
 import 'package:event_management_1/data/local/user_data_local.dart';
+import 'package:event_management_1/data/model/history_model.dart';
 import 'package:event_management_1/data/model/user_model.dart';
 import 'package:event_management_1/model/const.dart';
 import 'package:flutter/material.dart';
@@ -32,8 +34,18 @@ class _UserItem extends State<UserItem>{
 
   final UserApi userApi = UserApi();
   final SQLiteUser userSqlite = SQLiteUser();
+  final SQLiteHistory historySqlite = SQLiteHistory();
 
   bool _isLoading = false; 
+
+  HistoryModel _setHistory(UserModel user, String oldStatus){
+    return HistoryModel(
+      dateCreated: DateTime.now().toString(), 
+      userId: user.userId, 
+      oldStatus: oldStatus, 
+      newStatus: user.status
+    );
+  }
 
   Future<bool> _checkStatus(BuildContext context) async{
     bool? result = await showDialog<bool>(
@@ -73,7 +85,7 @@ class _UserItem extends State<UserItem>{
         final updatedStatus = widget.user.status == userState(1) ? userState(2) : userState(1);
         widget.user.status = updatedStatus;
 
-        bool isUpdateApi = await userApi.updateStatusUser(widget.user)
+        bool isUpdateApi = await userApi.updateStatusUser(widget.user.userId!, widget.user.status!)
           .timeout(const Duration(seconds: 35), onTimeout: () {
           throw TimeoutException("Thời gian chờ quá lâu. Vui lòng thực hiện lại sau.");
         });
@@ -116,6 +128,7 @@ class _UserItem extends State<UserItem>{
       });
       
       try {
+        final oldStatus = widget.user.status;
         final updatedStatus = widget.user.status == userState(1) ? userState(2) : userState(1);
         widget.user.status = updatedStatus;
 
@@ -123,9 +136,10 @@ class _UserItem extends State<UserItem>{
           .timeout(const Duration(seconds: 35), onTimeout: () {
           throw TimeoutException("Thời gian chờ quá lâu. Vui lòng thực hiện lại sau.");
         });
-        
-        
 
+        HistoryModel history = _setHistory(widget.user, oldStatus!);
+        await historySqlite.addHistory(history);
+        
         if (isUpdateLocal) {
           setState(() {
             iconCheck = updatedStatus == userState(1) ? check_box_outlined : square_outlined;

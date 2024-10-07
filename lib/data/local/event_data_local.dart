@@ -2,10 +2,10 @@ import 'dart:developer';
 
 import 'package:event_management_1/data/local/main_local.dart';
 import 'package:event_management_1/data/model/event_model.dart';
-import 'package:sqflite/sqflite.dart';
 
 class SQLiteEvent{
   final _sqlite = SQLiteMain();
+  final EventModelProperty property = EventModelProperty();
 
   Future<List<EventModel>> getList() async{
     try{
@@ -40,43 +40,13 @@ class SQLiteEvent{
     }
   }
 
-  // void addOrUpdateEvent(EventModel event) {
-  //   _sqlite.database.then((db) {
-  //     db.rawQuery('SELECT * FROM event WHERE eventId = ?', [event.eventId]).then((existingEvent) {
-  //       if (existingEvent.isNotEmpty) {
-  //         db.rawUpdate(
-  //           'UPDATE event SET eventCode = ?, eventName = ? WHERE eventId = ?',
-  //           [event.eventCode, event.eventName, event.eventId],
-  //         ).then((_) {
-  //           log('Updated event with eventId ${event.eventId}');
-  //         }).catchError((error) {
-  //           log('Error updating event: $error');
-  //         });
-  //       } else {
-  //         db.rawInsert(
-  //           'INSERT INTO event (eventId, eventCode, eventName) VALUES (?, ?, ?)',
-  //           [event.eventId, event.eventCode, event.eventName],
-  //         ).then((_) {
-  //           log('Inserted new event with eventId ${event.eventId}');
-  //         }).catchError((error) {
-  //           log('Error inserting event: $error');
-  //         });
-  //       }
-  //     }).catchError((error) {
-  //       log('Error querying event: $error');
-  //     });
-  //   }).catchError((error) {
-  //     log('Error opening database: $error');
-  //   });
-  // }
-
   void addOrUpdateEvent(EventModel event) {
     _sqlite.database.then((db) {
-      db.rawQuery('SELECT * FROM event WHERE EventID = ?', [event.eventId]).then((existingEvent) {
+      db.rawQuery('SELECT * FROM event WHERE ${property.eventId} = ?', [event.eventId]).then((existingEvent) {
         if (existingEvent.isNotEmpty) {
           // Nếu tồn tại, cập nhật sự kiện
           db.rawUpdate(
-            'UPDATE event SET EventCode = ?, EventName = ? WHERE EventID = ?',
+            'UPDATE event SET ${property.eventCode} = ?, ${property.eventName} = ? WHERE ${property.eventId} = ?',
             [event.eventCode, event.eventName, event.eventId],
           ).then((_) {
             log('Updated event with eventId ${event.eventId}');
@@ -86,7 +56,7 @@ class SQLiteEvent{
         } else {
           // Nếu không tồn tại, thêm sự kiện mới
           db.rawInsert(
-            'INSERT INTO event (EventID, EventCode, EventName) VALUES (?, ?, ?)',
+            'INSERT INTO event (${property.eventId}, ${property.eventCode}, ${property.eventName}) VALUES (?, ?, ?)',
             [event.eventId, event.eventCode, event.eventName],
           ).then((_) {
             log('Inserted new event with eventId ${event.eventId}');

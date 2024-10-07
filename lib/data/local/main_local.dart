@@ -1,5 +1,8 @@
 import 'dart:developer';
 
+import 'package:event_management_1/data/model/event_model.dart';
+import 'package:event_management_1/data/model/history_model.dart';
+import 'package:event_management_1/data/model/user_model.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -9,6 +12,10 @@ class SQLiteMain{
   static final SQLiteMain _mainSqlite = SQLiteMain._internal();
   factory SQLiteMain() => _mainSqlite;
   SQLiteMain._internal();
+
+  final UserModelProperty userProperty = UserModelProperty();
+  final EventModelProperty eventProperty = EventModelProperty();
+  final HistoryModelProperty historyProperty = HistoryModelProperty();
 
   static Database? _database;
   Future<Database> get database async {
@@ -42,29 +49,40 @@ class SQLiteMain{
   }
 
   void _onCreate(Database db, int version) async {
-  try {
-    await db.execute(
-      'CREATE TABLE IF NOT EXISTS user ('
-      'UserID TEXT PRIMARY KEY, ' 
-      'EventID TEXT, ' 
-      'UserCode TEXT, '  
-      'FullName TEXT, '  
-      'CCCD TEXT, '   
-      'Phone TEXT, '  
-      'Email TEXT, '   
-      'isCheck TEXT);'   
-    );
+    try {
+      await db.execute(
+        'CREATE TABLE IF NOT EXISTS user ('
+        '${userProperty.userId} TEXT PRIMARY KEY, ' 
+        '${userProperty.eventId} TEXT, ' 
+        '${userProperty.userCode} TEXT, '  
+        '${userProperty.fullname} TEXT, '  
+        '${userProperty.cccd} TEXT, '   
+        '${userProperty.phone} TEXT, '  
+        '${userProperty.email} TEXT, '   
+        '${userProperty.status} TEXT);'   
+      );
 
-    await db.execute(
-      'CREATE TABLE IF NOT EXISTS event ('
-      'EventID TEXT PRIMARY KEY, ' 
-      'EventCode TEXT, ' 
-      'EventName TEXT);' 
-    );
-  } catch (e) {
-    log('Error creating tables: $e');
-    rethrow;
+      await db.execute(
+        'CREATE TABLE IF NOT EXISTS event ('
+        '${eventProperty.eventId} TEXT PRIMARY KEY, ' 
+        '${eventProperty.eventCode} TEXT, ' 
+        '${eventProperty.eventName} TEXT);' 
+      );
+
+      await db.execute(
+        'CREATE TABLE IF NOT EXISTS history ('
+        '${historyProperty.historyId} INTEGER PRIMARY KEY AUTOINCREMENT, ' 
+        '${historyProperty.dateCreated} TEXT, ' 
+        '${historyProperty.userId} TEXT, '
+        '${historyProperty.oldStatus} TEXT, '
+        '${historyProperty.newStatus} TEXT);'
+      );
+
+
+    } catch (e) {
+      log('Error creating tables: $e');
+      rethrow;
+    }
   }
-}
 
 }

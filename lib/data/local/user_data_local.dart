@@ -6,6 +6,7 @@ import 'package:sqflite/sqflite.dart';
 
 class SQLiteUser{
   final _sqlite = SQLiteMain();
+  final UserModelProperty property = UserModelProperty();
 
   Future<List<UserModel>> getList() async{
     try{
@@ -44,7 +45,7 @@ class SQLiteUser{
     try{
       final db = await _sqlite.database;
       int count = await db.rawUpdate(
-        'UPDATE user SET EventID = ?, UserCode = ?, FullName = ?, CCCD = ?, Phone = ?, Email = ?, isCheck = ? WHERE UserID = ?',
+        'UPDATE user SET ${property.eventId} = ?, ${property.userCode} = ?, ${property.fullname} = ?, ${property.cccd} = ?, ${property.phone} = ?, ${property.email} = ?, ${property.status} = ? WHERE ${property.userId} = ?',
         [
           user.eventId,
           user.userCode,
@@ -67,11 +68,11 @@ class SQLiteUser{
   void addOrUpdateUser(UserModel user) {
     _sqlite.database.then((db) {
       // Kiểm tra sự tồn tại của người dùng
-      db.rawQuery('SELECT * FROM user WHERE UserID = ?', [user.userId]).then((existingUser) {
+      db.rawQuery('SELECT * FROM user WHERE ${property.userId} = ?', [user.userId]).then((existingUser) {
         if (existingUser.isNotEmpty) {
           // Nếu tồn tại, cập nhật người dùng
           db.rawUpdate(
-            'UPDATE user SET EventID = ?, UserCode = ?, FullName = ?, CCCD = ?, Phone = ?, Email = ?, isCheck = ? WHERE UserID = ?',
+            'UPDATE user SET ${property.eventId} = ?, ${property.userCode} = ?, ${property.fullname} = ?, ${property.cccd} = ?, ${property.phone} = ?, ${property.email} = ?, ${property.status} = ? WHERE ${property.userId} = ?',
             [
               user.eventId,
               user.userCode,
@@ -90,7 +91,7 @@ class SQLiteUser{
         } else {
           // Nếu không tồn tại, thêm người dùng mới
           db.rawInsert(
-            'INSERT INTO user (UserID, EventID, UserCode, FullName, CCCD, Phone, Email, isCheck) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            'INSERT INTO user (${property.userId}, ${property.eventId}, ${property.userCode}, ${property.fullname}, ${property.cccd}, ${property.phone}, ${property.email}, ${property.status}) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
             [
               user.userId,
               user.eventId,

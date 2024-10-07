@@ -1,6 +1,19 @@
+class UserModelProperty{
+  String userId="UserID", 
+        eventId="EventID", 
+        userCode="UserCode", 
+        fullname="FullName", 
+        cccd="CCCD", 
+        phone="Phone", 
+        email="Email", 
+        status="isCheck";
+}
+
 class UserModel{
   String? userId, eventId, userCode, fullname, cccd, phone, email, status;
   String? facility, office, desciption, userUpdate;
+  UserModelProperty userModelProperty = UserModelProperty();
+
   UserModel({
     required this.userId,
     required this.userCode,
@@ -14,13 +27,13 @@ class UserModel{
   });
 
   UserModel.fromJson(Map<dynamic, dynamic> e){
-    userId = e["UserID"].toString();
-    eventId = e["EventID"];
-    userCode = e["UserCode"];
-    fullname = e["FullName"];
-    cccd = e["CCCD"];
-    phone = e["Phone"];
-    email = e["Email"];
-    status = e["isCheck"];
+    userId = e[userModelProperty.userId].toString();
+    eventId = e[userModelProperty.eventId];
+    userCode = e[userModelProperty.userCode];
+    fullname = e[userModelProperty.fullname];
+    cccd = e[userModelProperty.cccd];
+    phone = e[userModelProperty.phone];
+    email = e[userModelProperty.email];
+    status = e[userModelProperty.status];
   }
 }
