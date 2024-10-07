@@ -13,3 +13,10 @@ Color colorState(String state){
     default: throw Error();
   }
 }
+
+String userState(int i){
+  switch (i){
+    case 1: return 'Checked';
+    default: return 'UnCheck';
+  }
+}

@@ -1,7 +1,5 @@
 import 'package:event_management_1/controll/state/list_user_provide.dart';
-import 'package:event_management_1/data/model/user_model.dart';
 import 'package:event_management_1/model/const.dart';
-import 'package:event_management_1/ui/list_user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

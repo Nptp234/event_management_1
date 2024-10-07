@@ -1,9 +1,16 @@
 
+// ignore_for_file: non_constant_identifier_names
+
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:event_management_1/controll/state/list_user_provide.dart';
+import 'package:event_management_1/data/api/user_api.dart';
 import 'package:event_management_1/data/model/user_model.dart';
 import 'package:event_management_1/model/const.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quickalert/quickalert.dart';
 
 class UserItem extends StatefulWidget{
 
@@ -21,11 +28,86 @@ class _UserItem extends State<UserItem>{
   IconData square_outlined = Icons.square_outlined;
   IconData check_box_outlined = Icons.check_box_outlined;
 
+  final UserApi userApi = UserApi();
+
+  bool _isLoading = false; 
+
+  Future<bool> checkStatus(BuildContext context) async{
+    bool? result = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Xác nhận", style: TextStyle(fontWeight: FontWeight.bold),),
+          content: Text("Bạn muốn thay đổi trạng thái tham gia của '${widget.user.fullname}'?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); 
+              },
+              child: const Text("Hủy", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true); 
+              },
+              child: Text("Đồng ý", style: TextStyle(fontWeight: FontWeight.bold, color: mainColor),),
+            ),
+          ],
+        );
+      },
+    );
+
+    return result ?? false;
+  }
+
+  Future<void> handleUpdateStatus(ListUserProvider value, BuildContext context) async {
+    bool canDo = await checkStatus(context);
+
+    if(canDo){
+      setState(() {
+        _isLoading = true;
+      });
+      
+      try {
+        final updatedStatus = widget.user.status == userState(1) ? userState(2) : userState(1);
+        widget.user.status = updatedStatus;
+
+        bool isUpdateApi = await userApi.updateStatusUser(widget.user)
+          .timeout(const Duration(seconds: 35), onTimeout: () {
+          throw TimeoutException("Thời gian chờ quá lâu. Vui lòng thực hiện lại sau.");
+        });
+        
+        
+
+        if (isUpdateApi) {
+          setState(() {
+            iconCheck = updatedStatus == userState(1) ? check_box_outlined : square_outlined;
+            widget.colorState = colorState(updatedStatus);
+            widget.user.status = updatedStatus; 
+          });
+          value.updateUser(widget.user); 
+        } else {
+          throw Exception('Hiện tại không thể cập nhật thông tin.');
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Lỗi xảy ra khi cố gắng cập nhật người dùng: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        log("$e");
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   void initState() {
-    if(widget.user.status=="Checked"){
-      iconCheck = check_box_outlined;
-    }else{iconCheck = square_outlined;}
+    iconCheck = widget.user.status == userState(1) ? check_box_outlined : square_outlined;
     super.initState();
   }
 
@@ -69,24 +151,14 @@ class _UserItem extends State<UserItem>{
           ),
           Consumer<ListUserProvider>(
             builder: (context, value, child) {
+              iconCheck = widget.user.status == userState(1) ? check_box_outlined : square_outlined;
               return IconButton(
-                onPressed: (){
-                  if(iconCheck==square_outlined){
-                    setState(() {
-                      iconCheck=check_box_outlined;
-                      widget.user.status="Checked";
-                      widget.colorState = colorState("Checked");
-                    });
-                  }else{
-                    setState(() {
-                      iconCheck=square_outlined;
-                      widget.user.status="UnCheck";
-                      widget.colorState = colorState("UnCheck");
-                    });
-                  }
-                  value.updateUser(widget.user);
-                }, 
-                icon: Icon(iconCheck, color: mainColor, size: 25,)
+                onPressed: _isLoading ? null: () async {
+                  await handleUpdateStatus(value, context);
+                },
+                icon: _isLoading
+                  ? CircularProgressIndicator(color: mainColor, strokeWidth: 2,)
+                  : Icon(iconCheck, color: mainColor, size: 25),
               );
             },
           ),

@@ -8,11 +8,11 @@ import 'package:provider/provider.dart';
 class EventFilterBar extends StatefulWidget{
   EventFilterBar({super.key});
 
-  List<EventModel> lstEvent = [
-    EventModel(eventId: '1', eventCode: '123', eventName: 'Sự kiện đầu'),
-    EventModel(eventId: '2', eventCode: '122', eventName: 'Sự kiện sau'),
-    EventModel(eventId: '3', eventCode: '111', eventName: 'Sự kiện cuối'),
-  ];
+  // List<EventModel> lstEvent = [
+  //   EventModel(eventId: '1', eventCode: '123', eventName: 'Sự kiện đầu'),
+  //   EventModel(eventId: '2', eventCode: '122', eventName: 'Sự kiện sau'),
+  //   EventModel(eventId: '3', eventCode: '111', eventName: 'Sự kiện cuối'),
+  // ];
   String? valueDropdown;
 
   @override
@@ -29,16 +29,7 @@ class _EventFilterBar extends State<EventFilterBar>{
 
   @override
   void initState() {
-    dropdownValue = widget.lstEvent[0].eventName;
-    final provider = Provider.of<ListEventProvider>(context, listen: false);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      provider.setList(widget.lstEvent);
-    });
-    final userProvider = Provider.of<ListUserProvider>(context, listen: false);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      userProvider.filterListEventID(widget.lstEvent[0].eventId!);
-      userProvider.setEventName(widget.lstEvent[0].eventName!);
-    });
+    dropdownValue=widget.valueDropdown;
     super.initState();
   }
 

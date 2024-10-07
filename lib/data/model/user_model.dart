@@ -14,7 +14,7 @@ class UserModel{
   });
 
   UserModel.fromJson(Map<dynamic, dynamic> e){
-    userId = e["UserID"];
+    userId = "${e["UserID"]}";
     eventId = e["EventID"];
     userCode = e["UserCode"];
     fullname = e["FullName"];

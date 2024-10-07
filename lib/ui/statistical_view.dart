@@ -31,7 +31,7 @@ class _StatisticalView extends State<StatisticalView>{
     return Consumer<ListUserProvider>(
       builder: (context, value, child) {
         int total = value.lstUser.length;
-        int totalScanned = value.lstUser.where((user) => user.status == "Checked").length;
+        int totalScanned = value.lstUser.where((user) => user.status == userState(1)).length;
         
         return Container(
           width: getMainWidth(context),
@@ -59,8 +59,9 @@ class _StatisticalView extends State<StatisticalView>{
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Tổng số người tham gia: $total", style: TextStyle(fontSize: 20, color: Colors.black),),
-                    Text("Tổng số người đã quét mã: $totalScanned", style: TextStyle(fontSize: 20, color: Colors.black),),
+                    Text("Tổng số người tham gia: $total", style: TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.bold),),
+                    Text("Tổng số người đã quét mã: $totalScanned", style: TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.bold),),
+                    Text("Tổng số người chưa quét mã: ${total-totalScanned}", style: TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.bold),),
                   ],
                 )
               ),

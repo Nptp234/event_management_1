@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:event_management_1/controll/data/fetch_data.dart';
 import 'package:event_management_1/model/bottom_menu.dart';
 import 'package:event_management_1/model/const.dart';
 import 'package:flutter/material.dart';
@@ -13,16 +14,28 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
+
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 10), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const BottomMenu(),
-        ),
-      );
+    Timer(const Duration(seconds: 1), () async {
+      bool fetchSuccess = await fetchData(context);
+      
+      if (fetchSuccess) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const BottomMenu(),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Không thể tải dữ liệu. Vui lòng thử lại.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     });
   }
 
