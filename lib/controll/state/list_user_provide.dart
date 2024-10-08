@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class ListUserProvider with ChangeNotifier{
   List<UserModel> _lstUser = [];
   List<UserModel> _filteredUsers = [];
-  String? _eventIdFilter, eventName;
+  String? eventIdFilter, eventName;
   String _searchQuery = '';
 
   List<UserModel> get lstUser => _filteredUsers.isEmpty ? [] : _filteredUsers;
@@ -39,7 +39,7 @@ class ListUserProvider with ChangeNotifier{
                                  user.phone!.toLowerCase().contains(_searchQuery.toLowerCase()) ||
                                  user.email!.toLowerCase().contains(_searchQuery.toLowerCase());
 
-      final bool matchesEventId = _eventIdFilter == null || user.eventId == _eventIdFilter;
+      final bool matchesEventId = eventIdFilter == null || user.eventId == eventIdFilter;
 
       return matchesSearch && matchesEventId;
     }).toList();
@@ -52,7 +52,7 @@ class ListUserProvider with ChangeNotifier{
   }
 
   void filterListEventID(String eventId) {
-    _eventIdFilter = eventId.isEmpty ? null : eventId;
+    eventIdFilter = eventId.isEmpty ? null : eventId;
     _filterUsers();
   }
 

@@ -43,8 +43,8 @@ final SQLiteEvent sqLiteEvent = SQLiteEvent();
         final userProvider = Provider.of<ListUserProvider>(context, listen: false);
         WidgetsBinding.instance.addPostFrameCallback((_) {
           userProvider.setList(lstUser);
-          userProvider.filterListEventID(lstEvent[0].eventId!);
-          userProvider.setEventName(lstEvent[0].eventName!);
+          userProvider.filterListEventID(userProvider.eventIdFilter??lstEvent[0].eventId!);
+          userProvider.setEventName(userProvider.eventName??lstEvent[0].eventName!);
         });
         await sqLiteUser.setList(lstUser);
 
@@ -92,8 +92,8 @@ final SQLiteEvent sqLiteEvent = SQLiteEvent();
         final userProvider = Provider.of<ListUserProvider>(context, listen: false);
         WidgetsBinding.instance.addPostFrameCallback((_) {
           userProvider.setList(lstUser);
-          userProvider.filterListEventID(lstEvent[0].eventId!);
-          userProvider.setEventName(lstEvent[0].eventName!);
+          userProvider.filterListEventID(userProvider.eventIdFilter??lstEvent[0].eventId!);
+          userProvider.setEventName(userProvider.eventName??lstEvent[0].eventName!);
         });
 
         final eventProvider = Provider.of<ListEventProvider>(context, listen: false);
