@@ -1,19 +1,43 @@
 # event_management_1
 
-Giao diện chào mừng (tải dữ liệu)
+# Event Mangement
 
-![5901045638160-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/c37fde0c-ecb0-4883-aae1-118de71db556)
+## Yêu cầu hệ thống
+- Flutter SDK >= 3.0
+- Dart >= 2.18
+- Android Studio hoặc Xcode (tuỳ vào nền tảng mục tiêu)
+- Visual Studio Code (tùy chọn)
 
-Giao diện danh sách người tham gia
+## Cài đặt
+### 1. Clone repository
+```bash
+git clone https://github.com/Nptp234/event_management_1.git
+cd event_management_1
+```
 
-![5901648689766-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/44720596-f1fd-40d6-8600-5274344c52cd)
+### 2. Cài đặt các dependencies
+```bash
+flutter pub get
+```
 
-Giao diện thống kê
+### 3. Build cho Android
+``` bash
+flutter build apk
+```
 
-![59010734335361-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/72ec22c5-4d09-4fba-a0f3-76462fa08e9e)
+### 4. Build cho IOS
+``` bash
+flutter build ios
+```
 
-Giao diện quét QR
+### 5. Kiểm tra cấu hình
+``` bash
+flutter doctor
+```
 
+### 6. Chạy dự án
+``` bash
+flutter run
+```
 
-https://github.com/user-attachments/assets/85782a8e-38ae-40e6-8504-add427408c82
-
+### 7. Lưu ý: Để chạy được trên máy ảo cần thay đổi localhost trong api thành địa chỉ ip ví dụ "http://localhost:5202/events" sẽ thành "http://192.168.10.***:5202/events" (thay thành địa chỉ ip của bạn)
