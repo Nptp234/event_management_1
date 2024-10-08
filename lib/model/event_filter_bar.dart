@@ -45,8 +45,8 @@ class _EventFilterBar extends State<EventFilterBar>{
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Chọn sự kiện: ", style: TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.bold),),
-              _dropdownButton(value)
+              const Expanded(flex: 0, child: Text("Chọn sự kiện: ", style: TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.bold),),),
+              Expanded(flex: 1, child: _dropdownButton(value))
             ],
           ),
         );
@@ -57,10 +57,12 @@ class _EventFilterBar extends State<EventFilterBar>{
   Widget _dropdownButton(ListUserProvider provider){
     return Consumer<ListEventProvider>(
       builder: (context, value, child) {
-        return DropdownButton<String>(
+        return Flexible(
+          child: DropdownButton<String>(
             value: dropdownValue,
             icon: const Icon(Icons.arrow_downward_rounded, size: 25, color: Colors.grey,),
             elevation: 16,
+            isExpanded: true,
             style: const TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
             onChanged: (String? currentValue){
               setState(() {
@@ -76,11 +78,12 @@ class _EventFilterBar extends State<EventFilterBar>{
               (EventModel event){
                 return DropdownMenuItem<String>(
                   value: event.eventName,
-                  child: Text(event.eventName!)
+                  child: Flexible(child: Text(event.eventName!, softWrap: true, overflow: TextOverflow.ellipsis,))
                 );
               }
             ).toList(), 
-          );
+          ),
+        );
       },
     );
   }

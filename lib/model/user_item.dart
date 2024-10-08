@@ -14,7 +14,6 @@ import 'package:event_management_1/data/model/user_model.dart';
 import 'package:event_management_1/model/const.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quickalert/quickalert.dart';
 
 class UserItem extends StatefulWidget{
 
@@ -85,7 +84,7 @@ class _UserItem extends State<UserItem>{
         final updatedStatus = widget.user.status == userState(1) ? userState(2) : userState(1);
         widget.user.status = updatedStatus;
 
-        bool isUpdateApi = await userApi.updateStatusUser(widget.user.userId!, widget.user.status!)
+        bool isUpdateApi = await userApi.updateStatusUser(widget.user.userId!, widget.user.status!, context)
           .timeout(const Duration(seconds: 35), onTimeout: () {
           throw TimeoutException("Thời gian chờ quá lâu. Vui lòng thực hiện lại sau.");
         });

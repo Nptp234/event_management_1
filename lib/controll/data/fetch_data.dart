@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, unused_element
 
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:event_management_1/controll/check_connection.dart';
 import 'package:event_management_1/controll/state/list_event_provider.dart';
@@ -12,7 +11,6 @@ import 'package:event_management_1/data/local/event_data_local.dart';
 import 'package:event_management_1/data/local/user_data_local.dart';
 import 'package:event_management_1/data/model/event_model.dart';
 import 'package:event_management_1/data/model/user_model.dart';
-import 'package:event_management_1/model/const.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -35,12 +33,17 @@ final SQLiteEvent sqLiteEvent = SQLiteEvent();
       if (responses.contains(null)) {
         return false; 
       }
+      
+      final userProvider = Provider.of<ListUserProvider>(context, listen: false);
+      final eventProvider = Provider.of<ListEventProvider>(context, listen: false);
 
       List<UserModel> lstUser = responses[0] as List<UserModel>;
       List<EventModel> lstEvent = responses[1] as List<EventModel>;
 
+      if(lstEvent.isEmpty){lstEvent=eventProvider.lstEvent;}
+
       if (lstUser.isNotEmpty && lstEvent.isNotEmpty) {
-        final userProvider = Provider.of<ListUserProvider>(context, listen: false);
+        
         WidgetsBinding.instance.addPostFrameCallback((_) {
           userProvider.setList(lstUser);
           userProvider.filterListEventID(userProvider.eventIdFilter??lstEvent[0].eventId!);
@@ -48,7 +51,6 @@ final SQLiteEvent sqLiteEvent = SQLiteEvent();
         });
         await sqLiteUser.setList(lstUser);
 
-        final eventProvider = Provider.of<ListEventProvider>(context, listen: false);
         WidgetsBinding.instance.addPostFrameCallback((_) {
           eventProvider.setList(lstEvent);
         });
@@ -138,34 +140,3 @@ final SQLiteEvent sqLiteEvent = SQLiteEvent();
       return false; 
     }
   } 
-
-  Timer? _timer;
-
-  void asyncDataOnlineOnly(BuildContext context) {
-    _timer = Timer.periodic(const Duration(seconds: 120), (Timer timer) async{
-      bool isConnect = await checkInternetConnection();
-      if(isConnect){
-        fetchDataOnline(context).then((isSuccess) {
-          if (isSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: const Text('Dữ liệu đã đồng bộ thành công'),
-                backgroundColor: mainColor,
-                padding: const EdgeInsets.only(bottom: 30, left: 10, right: 10),
-              ),
-            );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Dữ liệu đã đồng bộ thất bại'),
-                backgroundColor: Colors.red,
-                padding: EdgeInsets.only(bottom: 30, left: 10, right: 10),
-              ),
-            );
-          }
-        }).catchError((error) {
-          log('Đã xảy ra lỗi: $error');
-        });
-      }
-    });
-  }

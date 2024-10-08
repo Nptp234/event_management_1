@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:event_management_1/data/local/main_local.dart';
 import 'package:event_management_1/data/model/user_model.dart';
-import 'package:sqflite/sqflite.dart';
 
 class SQLiteUser{
   final _sqlite = SQLiteMain();
@@ -41,11 +40,11 @@ class SQLiteUser{
     }
   }
 
-  Future<bool> updateUser(UserModel user) async{
-    try{
+  Future<bool> updateUser(UserModel user) async {
+    try {
       final db = await _sqlite.database;
       int count = await db.rawUpdate(
-        'UPDATE user SET ${property.eventId} = ?, ${property.userCode} = ?, ${property.fullname} = ?, ${property.cccd} = ?, ${property.phone} = ?, ${property.email} = ?, ${property.status} = ? WHERE ${property.userId} = ?',
+        'UPDATE user SET ${property.eventId} = ?, ${property.userCode} = ?, ${property.fullname} = ?, ${property.cccd} = ?, ${property.phone} = ?, ${property.email} = ?, ${property.status} = ?, ${property.facility} = ?, ${property.office} = ?, ${property.desciption} = ?, ${property.userUpdate} = ?, ${property.dateUpdate} = ? WHERE ${property.userId} = ?',
         [
           user.eventId,
           user.userCode,
@@ -54,12 +53,16 @@ class SQLiteUser{
           user.phone,
           user.email,
           user.status,
+          user.facility,
+          user.office,
+          user.desciption,
+          user.userUpdate,
+          user.dateUpdate,
           user.userId
         ],
       );
-      return count>0;
-    }
-    catch(e){
+      return count > 0;
+    } catch (e) {
       log("$e");
       return false;
     }
@@ -67,12 +70,10 @@ class SQLiteUser{
 
   void addOrUpdateUser(UserModel user) {
     _sqlite.database.then((db) {
-      // Kiểm tra sự tồn tại của người dùng
       db.rawQuery('SELECT * FROM user WHERE ${property.userId} = ?', [user.userId]).then((existingUser) {
         if (existingUser.isNotEmpty) {
-          // Nếu tồn tại, cập nhật người dùng
           db.rawUpdate(
-            'UPDATE user SET ${property.eventId} = ?, ${property.userCode} = ?, ${property.fullname} = ?, ${property.cccd} = ?, ${property.phone} = ?, ${property.email} = ?, ${property.status} = ? WHERE ${property.userId} = ?',
+            'UPDATE user SET ${property.eventId} = ?, ${property.userCode} = ?, ${property.fullname} = ?, ${property.cccd} = ?, ${property.phone} = ?, ${property.email} = ?, ${property.status} = ?, ${property.facility} = ?, ${property.office} = ?, ${property.desciption} = ?, ${property.userUpdate} = ?, ${property.dateUpdate} = ? WHERE ${property.userId} = ?',
             [
               user.eventId,
               user.userCode,
@@ -81,6 +82,11 @@ class SQLiteUser{
               user.phone,
               user.email,
               user.status,
+              user.facility,
+              user.office,
+              user.desciption,
+              user.userUpdate,
+              user.dateUpdate,
               user.userId
             ],
           ).then((_) {
@@ -89,9 +95,8 @@ class SQLiteUser{
             log('Error updating user: $error');
           });
         } else {
-          // Nếu không tồn tại, thêm người dùng mới
           db.rawInsert(
-            'INSERT INTO user (${property.userId}, ${property.eventId}, ${property.userCode}, ${property.fullname}, ${property.cccd}, ${property.phone}, ${property.email}, ${property.status}) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            'INSERT INTO user (${property.userId}, ${property.eventId}, ${property.userCode}, ${property.fullname}, ${property.cccd}, ${property.phone}, ${property.email}, ${property.status}, ${property.facility}, ${property.office}, ${property.desciption}, ${property.userCreate}, ${property.dateCreate}, ${property.dateUpdate}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             [
               user.userId,
               user.eventId,
@@ -100,7 +105,13 @@ class SQLiteUser{
               user.cccd,
               user.phone,
               user.email,
-              user.status
+              user.status,
+              user.facility,
+              user.office,
+              user.desciption,
+              user.userCreate,
+              user.dateCreate,
+              user.dateUpdate
             ],
           ).then((_) {
             log('Inserted new user with UserID ${user.userId}');
@@ -115,6 +126,7 @@ class SQLiteUser{
       log('Error opening database: $error');
     });
   }
+
 
 
 }

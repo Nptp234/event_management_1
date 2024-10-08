@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:event_management_1/controll/data/fetch_data.dart';
-import 'package:event_management_1/data/local/user_data_local.dart';
 import 'package:event_management_1/model/bottom_menu.dart';
 import 'package:event_management_1/model/const.dart';
 import 'package:flutter/material.dart';

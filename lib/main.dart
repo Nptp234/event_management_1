@@ -1,4 +1,3 @@
-import 'package:event_management_1/controll/check_connection.dart';
 import 'package:event_management_1/controll/state/list_event_provider.dart';
 import 'package:event_management_1/controll/state/list_user_provide.dart';
 import 'package:event_management_1/controll/state/statistic_provider.dart';
@@ -9,7 +8,7 @@ import 'package:provider/provider.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: "lib/assets/.env");
+  // await dotenv.load(fileName: "lib/assets/.env");
   runApp(const MainApp());
 }
 

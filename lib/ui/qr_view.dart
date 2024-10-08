@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:event_management_1/controll/check_connection.dart';
-import 'package:event_management_1/controll/state/list_event_provider.dart';
 import 'package:event_management_1/controll/state/list_user_provide.dart';
 import 'package:event_management_1/data/api/user_api.dart';
 import 'package:event_management_1/data/local/history_data_local.dart';
@@ -53,7 +52,8 @@ class _QRView extends State<QRViewPage>{
   }
 
   Future<void> showDialogUpdate(UserModel user, BuildContext contextt) async{
-    showDialog(
+    try{
+      showDialog(
             context: contextt,
             builder: (BuildContext context) {
               return StatefulBuilder(
@@ -77,10 +77,10 @@ class _QRView extends State<QRViewPage>{
                           });
                           final oldStatus = user.status;
                           user.status = userState(1);
-                          await userApi.updateStatusUser(user.userId!, user.status!);
+                          await userApi.updateStatusUser(user.userId!, user.status!,context);
                           bool checkConnect = await checkInternetConnection();
                           if(checkConnect){
-                            await userApi.updateStatusUser(user.userId!, user.status!);
+                            await userApi.updateStatusUser(user.userId!, user.status!,context);
                           }
                           else{
                             bool isUpdateLocal = await sqLiteUser.updateUser(user);
@@ -126,6 +126,10 @@ class _QRView extends State<QRViewPage>{
               controller?.resumeCamera();
             }
           );
+    }
+    catch(e){
+      log("$e");
+    }
   }
   
 

@@ -1,6 +1,8 @@
 
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:event_management_1/controll/check_connection.dart';
-import 'package:event_management_1/controll/data/fetch_data.dart';
+import 'package:event_management_1/controll/data/async_data.dart';
 import 'package:event_management_1/model/const.dart';
 import 'package:event_management_1/ui/list_user.dart';
 import 'package:event_management_1/ui/qr_view.dart';
@@ -20,7 +22,7 @@ class BottomMenu extends StatefulWidget{
 class _BottomMenu extends State<BottomMenu> with TickerProviderStateMixin{
   
   MotionTabBarController? _motionTabBarController;
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
 
   final ConnectivityService _connectivityService = ConnectivityService();
 

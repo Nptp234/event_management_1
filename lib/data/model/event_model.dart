@@ -1,5 +1,5 @@
 class EventModelProperty{
-  String? eventId="EventID", eventCode="EventCode", eventName="EventName";
+  String? eventId="eventID", eventCode="eventCode", eventName="eventName";
 }
 
 class EventModel{

@@ -52,14 +52,22 @@ class SQLiteMain{
     try {
       await db.execute(
         'CREATE TABLE IF NOT EXISTS user ('
-        '${userProperty.userId} TEXT PRIMARY KEY, ' 
-        '${userProperty.eventId} TEXT, ' 
-        '${userProperty.userCode} TEXT, '  
-        '${userProperty.fullname} TEXT, '  
-        '${userProperty.cccd} TEXT, '   
-        '${userProperty.phone} TEXT, '  
-        '${userProperty.email} TEXT, '   
-        '${userProperty.status} TEXT);'   
+        '${userProperty.userId} TEXT PRIMARY KEY, '
+        '${userProperty.eventId} TEXT, '
+        '${userProperty.userCode} TEXT, '
+        '${userProperty.fullname} TEXT, '
+        '${userProperty.cccd} TEXT, '
+        '${userProperty.phone} TEXT, '
+        '${userProperty.email} TEXT, '
+        '${userProperty.status} TEXT, '
+        '${userProperty.facility} TEXT, '
+        '${userProperty.office} TEXT, '
+        '${userProperty.desciption} TEXT, '
+        '${userProperty.userCreate} TEXT, '
+        '${userProperty.userUpdate} TEXT, '
+        '${userProperty.dateCreate} TEXT, '
+        '${userProperty.dateUpdate} TEXT'
+        ');'
       );
 
       await db.execute(

@@ -4,17 +4,15 @@
 import 'dart:developer';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:event_management_1/controll/data/fetch_data.dart';
+import 'package:event_management_1/controll/data/async_data.dart';
 import 'package:event_management_1/controll/state/list_event_provider.dart';
 import 'package:event_management_1/controll/state/list_user_provide.dart';
 import 'package:event_management_1/data/api/user_api.dart';
 import 'package:event_management_1/data/local/event_data_local.dart';
 import 'package:event_management_1/data/local/history_data_local.dart';
 import 'package:event_management_1/data/local/user_data_local.dart';
-import 'package:event_management_1/data/model/history_model.dart';
 import 'package:event_management_1/model/const.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 Future<bool> checkInternetConnection() async{
@@ -113,32 +111,4 @@ class ConnectivityService {
       log("$e");
     }
   }
-
-  Future<bool> asyncData(BuildContext context) async{
-    try{
-      return await Future.any([
-        Future(() async {
-          List<HistoryModel> lstHistory = await sqLiteHistory.getList();
-          bool isUpdate = false;
-
-          for (var history in lstHistory) {
-            bool updateSuccess = await userApi.updateStatusUser(history.userId!, history.newStatus!);
-            isUpdate = updateSuccess;
-          }
-
-          if (isUpdate || lstHistory.isEmpty) {
-            bool fetchSuccess = await fetchData(context);
-            return fetchSuccess;
-          }
-          return false;
-        }),
-        Future.delayed(const Duration(seconds: 60), () => false)
-      ]);
-    }
-    catch(e){
-      log("$e");
-      return false;
-    }
-  }
-
 }
