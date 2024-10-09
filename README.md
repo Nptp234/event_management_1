@@ -39,5 +39,3 @@ flutter doctor
 ``` bash
 flutter run
 ```
-
-### 7. Lưu ý: Để chạy được trên máy ảo cần thay đổi localhost trong api thành địa chỉ ip ví dụ "http://localhost:5202/events" sẽ thành "http://192.168.10.***:5202/events" (thay thành địa chỉ ip của bạn)
