@@ -16,108 +16,50 @@ class UserApi{
   // String? baseUrl = "https://api.airtable.com/v0/${dotenv.env['BASE_ID']}/${dotenv.env['USER_TABLE_ID']}";
   
   String? swaggerUrl = "$getSwaggerUrl/users";
+  int maxPage = 50;
 
-  // Future<String> getRecordId(String userId) async{
-  //   try{
-  //     final res = await http.get(
-  //       Uri.parse('$baseUrl?filterByFormula={UserID}="$userId"'),
-  //       headers: {
-  //         'Authorization': 'Bearer $key',
-  //         'Content-Type': 'application/json'
-  //       },
-  //     );
-  //     if(res.statusCode==200){
-  //       final data = jsonDecode(res.body);
-  //       if(data['records'].isNotEmpty){
-  //         return data['records'][0]['id'];
-  //       }else{return '';}
-  //     }else {return '';}
-  //   }
-  //   catch(e){
-  //     log("$e");
-  //     return '';
-  //   }
-  // }
+  Future<List<UserModel>> getFullList() async {
+    List<UserModel> fullList = [];
+    int page = 1;
+    bool hasMoreData = true;
 
-  // Future<List<UserModel>> getList() async{
-  //   try{
-  //     final res = await http.get(
-  //       Uri.parse(baseUrl!),
-  //       headers: {"Authorization": "Bearer $key", "Content-Type": "application/json"}
-  //     );
-  //     if(res.statusCode==200){
-  //       final data = jsonDecode(res.body);
-  //       List<UserModel> lst = [];
-  //       var records = data["records"];
-  //       for(var record in records){
-  //         var field = record["fields"];
-  //         lst.add(UserModel.fromJson(field));
-  //       }
-  //       return lst;
-  //     }
-  //     return [];
-  //   }
-  //   catch(e){
-  //     log("$e");
-  //     return [];
-  //   }
-  // }
+    try {
+      while (hasMoreData) {
+        final body = {"query": {}, "page": page, "limit": maxPage, "sort": {}};
 
-  Future<List<UserModel>> getList() async{
-    try{
-      final body = {"query": {}, "page": 1, "limit": 10, "sort": {}};
+        final res = await http.post(
+          Uri.parse("$swaggerUrl"),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(body),
+        );
 
-      final res = await http.post(
-        Uri.parse("$swaggerUrl"),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(body)
-      );
+        if (res.statusCode == 200) {
+          final data = jsonDecode(res.body);
+          List<UserModel> lst = [];
+          var records = data["data"];
+          for (var record in records) {
+            lst.add(UserModel.fromJson(record));
+          }
 
-      if(res.statusCode==200){
-        final data = jsonDecode(res.body);
-        List<UserModel> lst = [];
-        var records = data["data"];
-        for(var record in records){
-          lst.add(UserModel.fromJson(record));
+          fullList.addAll(lst);
+
+          if (records.length < maxPage) {
+            hasMoreData = false;
+          } else {
+            page++; 
+          }
+        } else {
+          hasMoreData = false; 
         }
-        return lst;
       }
-      else{
-        return [];
-      }
-    }
-    catch(e){
+
+      return fullList;
+    } catch (e) {
       log("$e");
       return [];
     }
   }
 
-  // Future<bool> updateStatusUser(String userId, String userStatus) async{
-  //   try{
-  //     String recordId = await getRecordId(userId);
-  //     final body = {
-  //       "records":[
-  //           {
-  //             "id": recordId,
-  //             "fields":{
-  //               "isCheck": userStatus
-  //             }
-  //           }
-  //       ]
-  //     };
-
-  //     final res = await http.patch(
-  //       Uri.parse(baseUrl!),
-  //       headers: {"Authorization": "Bearer $key", "Content-Type": "application/json"},
-  //       body: jsonEncode(body)
-  //     );
-  //     return res.statusCode==200;
-  //   }
-  //   catch(e){
-  //     log("$e");
-  //     return false;
-  //   }
-  // }
 
   Future<bool> updateStatusUser(String userId, String userStatus, BuildContext context) async{
     try{

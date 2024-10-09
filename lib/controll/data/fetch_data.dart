@@ -21,8 +21,11 @@ final SQLiteEvent sqLiteEvent = SQLiteEvent();
 
   Future<bool> fetchDataOnline(BuildContext context) async {
     try {
+      final userProvider = Provider.of<ListUserProvider>(context, listen: false);
+      final eventProvider = Provider.of<ListEventProvider>(context, listen: false);
+
       final responses = await Future.wait([
-        userApi.getList().timeout(const Duration(seconds: 35), onTimeout: () {
+        userApi.getFullList().timeout(const Duration(seconds: 35), onTimeout: () {
           throw TimeoutException("Thời gian chờ quá lâu. Vui lòng chạy lại app.");
         }),
         eventApi.getList().timeout(const Duration(seconds: 35), onTimeout: () {
@@ -33,9 +36,6 @@ final SQLiteEvent sqLiteEvent = SQLiteEvent();
       if (responses.contains(null)) {
         return false; 
       }
-      
-      final userProvider = Provider.of<ListUserProvider>(context, listen: false);
-      final eventProvider = Provider.of<ListEventProvider>(context, listen: false);
 
       List<UserModel> lstUser = responses[0] as List<UserModel>;
       List<EventModel> lstEvent = responses[1] as List<EventModel>;

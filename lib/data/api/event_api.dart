@@ -38,7 +38,7 @@ class EventApi{
 
   Future<List<EventModel>> getList() async{
     try{
-      final body = {"query": {}, "page": 1, "limit": 10, "sort": {}};
+      final body = {"query": {}, "page": 1, "limit": 50, "sort": {}};
 
       final res = await http.post(
         Uri.parse("$swaggerUrl"),

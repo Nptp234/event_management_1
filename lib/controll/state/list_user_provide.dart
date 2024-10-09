@@ -35,7 +35,8 @@ class ListUserProvider with ChangeNotifier{
 
   void _filterUsers() {
     _filteredUsers = _lstUser.where((user) {
-      final bool matchesSearch = user.fullname!.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+      final bool matchesSearch = _searchQuery.isEmpty || _searchQuery=="" ||
+                                user.fullname!.toLowerCase().contains(_searchQuery.toLowerCase()) ||
                                  user.phone!.toLowerCase().contains(_searchQuery.toLowerCase()) ||
                                  user.email!.toLowerCase().contains(_searchQuery.toLowerCase());
 

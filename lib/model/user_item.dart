@@ -212,13 +212,21 @@ class _UserItem extends State<UserItem>{
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // 
-                Text(widget.user.fullname!, style: const TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold), maxLines: 1, textAlign: TextAlign.left,),
+                SizedBox(
+                  width: getMainWidth(context)/1.75,
+                  child: Flexible(
+                    child: Text(widget.user.fullname!, style: const TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold), maxLines: 3, textAlign: TextAlign.left, overflow: TextOverflow.ellipsis, softWrap: true,),
+                  ),
+                ),
                 const SizedBox(height: 7,),
                 // 
                 Text("Email: ${widget.user.email}", style: const TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.normal), maxLines: 2, textAlign: TextAlign.left,),
                 const SizedBox(height: 7,),
                 // 
                 Text("SDT: ${widget.user.phone}", style: const TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.normal), maxLines: 1, textAlign: TextAlign.left,),
+                const SizedBox(height: 7,),
+                // 
+                Text("CCCD: ${widget.user.cccd}", style: const TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.normal), maxLines: 1, textAlign: TextAlign.left,),
                 const SizedBox(height: 7,),
                 // 
                 const SizedBox(height: 10,),

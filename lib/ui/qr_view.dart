@@ -151,7 +151,7 @@ class _QRView extends State<QRViewPage>{
       controller?.resumeCamera();
     } 
     else {
-      final users = lstUser.where((user) => user!.fullname!.trim() == qrCode.trim()).toList();
+      final users = lstUser.where((user) => user!.fullname!.trim().contains(qrCode.trim())).toList();
 
       if (users.isNotEmpty) {
         UserModel user = users.first!;
