@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:event_management_1/controll/state/list_user_provide.dart';
+import 'package:event_management_1/data/api/const.dart';
 import 'package:event_management_1/data/model/user_model.dart';
 import 'package:event_management_1/model/const.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class UserApi{
   // String? key = dotenv.env["PUBLIC_KEY"];
   // String? baseUrl = "https://api.airtable.com/v0/${dotenv.env['BASE_ID']}/${dotenv.env['USER_TABLE_ID']}";
   
-  String? swaggerUrl = "http://localhost:5202/users";
+  String? swaggerUrl = "$getSwaggerUrl/users";
 
   // Future<String> getRecordId(String userId) async{
   //   try{
