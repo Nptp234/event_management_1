@@ -67,7 +67,7 @@ class _QRView extends State<QRViewPage>{
                       children: [
                         Expanded(
                           flex: 0,
-                          child: Text('Họ tên: ${user.fullname}', style: const TextStyle(fontWeight: FontWeight.bold), maxLines: 5, overflow: TextOverflow.ellipsis, softWrap: true,),
+                          child: Text('${user.fullname}', style: const TextStyle(fontWeight: FontWeight.bold), maxLines: 5, overflow: TextOverflow.ellipsis, softWrap: true,),
                         ),
                         Expanded(
                           flex: 0,
@@ -111,6 +111,7 @@ class _QRView extends State<QRViewPage>{
                             SnackBar(
                               content: Text('Đã xác nhận cho ${user.fullname}'),
                               backgroundColor: Colors.green,
+                              padding: const EdgeInsets.only(bottom: 50),
                             ),
                           );
                           isUpdating = false;
@@ -157,13 +158,18 @@ class _QRView extends State<QRViewPage>{
         const SnackBar(
           content: Text('Mã QR không hợp lệ!'),
           backgroundColor: Colors.red,
+          padding: EdgeInsets.only(bottom: 50),
         ),
       );
       controller?.resumeCamera();
       isProcessing = false;
     } 
     else {
-      final users = lstUser.where((user) => user!.fullname!.toLowerCase().trim()==qrCode.toLowerCase().trim()).toList();
+      final List<UserModel?> users = lstUser.where((user) {
+        bool isDuplicateFullName = user!.fullname!.toLowerCase().trim() == qrCode.toLowerCase().trim();
+        bool isDuplicateUserCode = user.userCode?.toLowerCase().trim() == qrCode.toLowerCase().trim(); 
+        return isDuplicateFullName || isDuplicateUserCode;
+      }).toList();
 
       if (users.isNotEmpty) {
         UserModel user = users.first!;
@@ -177,6 +183,7 @@ class _QRView extends State<QRViewPage>{
           const SnackBar(
             content: Text('Mã QR không tồn tại!'),
             backgroundColor: Colors.red,
+            padding: EdgeInsets.only(bottom: 50),
           ),
         );
         controller?.resumeCamera();
@@ -206,7 +213,7 @@ class _QRView extends State<QRViewPage>{
         key: qrKey,
         onQRViewCreated: _onQRViewCreated,
         overlay: QrScannerOverlayShape(
-          borderColor: Colors.blue, 
+          borderColor: mainColor, 
           borderRadius: 10,
           borderLength: 30,
           borderWidth: 10,

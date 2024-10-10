@@ -38,7 +38,8 @@ class ListUserProvider with ChangeNotifier{
       final bool matchesSearch = _searchQuery.isEmpty || _searchQuery=="" ||
                                 user.fullname!.toLowerCase().trim().contains(_searchQuery.toLowerCase().trim()) ||
                                  user.phone!.toLowerCase().trim().contains(_searchQuery.toLowerCase().trim()) ||
-                                 user.email!.toLowerCase().trim().contains(_searchQuery.toLowerCase().trim());
+                                 user.email!.toLowerCase().trim().contains(_searchQuery.toLowerCase().trim()) ||
+                                 user.office!.toLowerCase().trim().contains(_searchQuery.toLowerCase().trim());
 
       final bool matchesEventId = eventIdFilter == null || user.eventId == eventIdFilter;
 

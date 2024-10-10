@@ -20,22 +20,36 @@ class ListUserPage extends StatefulWidget{
 
 class _ListUserPage extends State<ListUserPage>{
 
-  Future<void> _onRefresh(BuildContext context) async{
-    try{
-      bool fetchSuccess = await fetchData(context);
-      if (!fetchSuccess) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Không thể tải dữ liệu lúc này. Vui lòng thử lại sau vài giây.'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+  Future<void> _onRefresh(BuildContext context) async {
+  try {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Đang tải dữ liệu...'),
+        backgroundColor: Colors.blue,
+        padding: EdgeInsets.only(bottom: 50),
+      ),
+    );
+
+    bool fetchSuccess = await fetchData(context);
+    if (!fetchSuccess) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Không thể tải dữ liệu lúc này. Vui lòng thử lại sau vài giây.'),
+          backgroundColor: Colors.red,
+        padding: EdgeInsets.only(bottom: 50),
+        ),
+      );
     }
-    catch(e){
-      throw Exception(e);
-    }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Có lỗi xảy ra: $e'),
+        backgroundColor: Colors.red,
+        padding: const EdgeInsets.only(bottom: 50),
+      ),
+    );
   }
+}
 
   @override
   void initState() {

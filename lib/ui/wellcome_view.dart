@@ -34,6 +34,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           const SnackBar(
             content: Text('Không thể tải dữ liệu. Vui lòng thử lại.'),
             backgroundColor: Colors.red,
+            padding: EdgeInsets.only(bottom: 50),
           ),
         );
       }
