@@ -15,6 +15,7 @@ import 'package:event_management_1/model/const.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class UserItem extends StatefulWidget{
 
   UserItem({super.key, required this.user, required this.colorState});
@@ -52,7 +53,7 @@ class _UserItem extends State<UserItem>{
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text("Xác nhận", style: TextStyle(fontWeight: FontWeight.bold),),
-          content: Text("Bạn muốn thay đổi trạng thái tham gia của '${widget.user.fullname}'?"),
+          content: Text("Bạn muốn thay đổi trạng thái tham gia của '${widget.user.fullname}'?", style: const TextStyle(fontWeight: FontWeight.bold),),
           actions: [
             TextButton(
               onPressed: () {
@@ -194,7 +195,7 @@ class _UserItem extends State<UserItem>{
       width: getMainWidth(context),
       // height: 70,
       margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: Colors.grey[100]
@@ -215,22 +216,37 @@ class _UserItem extends State<UserItem>{
                 SizedBox(
                   width: getMainWidth(context)/1.75,
                   child: Flexible(
-                    child: Text(widget.user.fullname!, style: const TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold), maxLines: 3, textAlign: TextAlign.left, overflow: TextOverflow.ellipsis, softWrap: true,),
+                    child: Text(widget.user.fullname!, style: const TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold), maxLines: 5, textAlign: TextAlign.left, overflow: TextOverflow.ellipsis, softWrap: true,),
+                  ),
+                ),
+                const SizedBox(height: 7,),
+                //
+                SizedBox(
+                  width: getMainWidth(context)/1.75,
+                  child: Flexible(
+                    child: Text("${widget.user.office}", style: const TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.bold), maxLines: 3, textAlign: TextAlign.left, overflow: TextOverflow.ellipsis, softWrap: true,),
                   ),
                 ),
                 const SizedBox(height: 7,),
                 // 
-                Text("Email: ${widget.user.email}", style: const TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.normal), maxLines: 2, textAlign: TextAlign.left,),
+                SizedBox(
+                  width: getMainWidth(context)/1.55,
+                  child: Flexible(
+                    child: Text("Email: ${widget.user.email}", style: const TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.normal), maxLines: 3, textAlign: TextAlign.left, overflow: TextOverflow.ellipsis, softWrap: true,),
+                  ),
+                ),
                 const SizedBox(height: 7,),
                 // 
-                Text("SDT: ${widget.user.phone}", style: const TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.normal), maxLines: 1, textAlign: TextAlign.left,),
-                const SizedBox(height: 7,),
-                // 
-                Text("CCCD: ${widget.user.cccd}", style: const TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.normal), maxLines: 1, textAlign: TextAlign.left,),
+                SizedBox(
+                  width: getMainWidth(context)/1.55,
+                  child: Flexible(
+                    child: Text("SDT: ${widget.user.phone}", style: const TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.normal), maxLines: 3, textAlign: TextAlign.left, overflow: TextOverflow.ellipsis, softWrap: true,),
+                  ),
+                ),
                 const SizedBox(height: 7,),
                 // 
                 const SizedBox(height: 10,),
-                Text(widget.user.status!, style: TextStyle(fontSize: 15, color: widget.colorState, fontWeight: FontWeight.bold), maxLines: 1, textAlign: TextAlign.left,),
+                Text(widget.user.status!, style: TextStyle(fontSize: 15, color: widget.colorState, fontWeight: FontWeight.bold), maxLines: 1, textAlign: TextAlign.left, overflow: TextOverflow.ellipsis, softWrap: true,),
               ],
             ),
           ),

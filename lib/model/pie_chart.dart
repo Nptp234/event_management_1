@@ -5,6 +5,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class PieChartView extends StatefulWidget{
   PieChartView({super.key, required this.lstuser});
   List<UserModel> lstuser;

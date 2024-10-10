@@ -3,61 +3,47 @@ import 'dart:developer';
 
 import 'package:event_management_1/data/api/const.dart';
 import 'package:event_management_1/data/model/event_model.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class EventApi{
-  // String? key = dotenv.env["PUBLIC_KEY"];
-  // String? baseUrl = "https://api.airtable.com/v0/${dotenv.env['BASE_ID']}/${dotenv.env['EVENTS_TABLE_ID']}";
 
   String? swaggerUrl = "$getSwaggerUrl/events";
-
-  // Future<List<EventModel>> getList() async{
-  //   try{
-  //     final res = await http.get(
-  //       Uri.parse(baseUrl!),
-  //       headers: {"Authorization": "Bearer $key", "Content-Type": "application/json"}
-  //     );
-  //     if(res.statusCode==200){
-  //       final data = jsonDecode(res.body);
-  //       List<EventModel> lst = [];
-  //       var records = data["records"];
-  //       for(var record in records){
-  //         var field = record["fields"];
-  //         lst.add(EventModel.fromJson(field));
-  //       }
-  //       return lst;
-  //     }
-  //     return [];
-  //   }
-  //   catch(e){
-  //     log("$e");
-  //     return [];
-  //   }
-  // }
+  int maxPage = 50;
 
   Future<List<EventModel>> getList() async{
+    int page = 1, totalPage = 1;
+    bool hasMoreData = true;
+    List<EventModel> lst = [];
+
     try{
-      final body = {"query": {}, "page": 1, "limit": 50, "sort": {}};
+      while(hasMoreData){
+        final body = {"query": {}, "page": page, "limit": maxPage, "sort": {}};
 
-      final res = await http.post(
-        Uri.parse("$swaggerUrl"),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(body)
-      );
+        final res = await http.post(
+          Uri.parse("$swaggerUrl"),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(body)
+        );
 
-      if(res.statusCode==200){
-        final data = jsonDecode(res.body);
-        List<EventModel> lst = [];
-        var records = data["data"];
-        for(var record in records){
-          lst.add(EventModel.fromJson(record));
+        if(res.statusCode==200){
+          final data = jsonDecode(res.body);
+          var records = data["data"];
+          for(var record in records){
+            lst.add(EventModel.fromJson(record));
+          }
+          totalPage = data["metadata"]["totalPages"];
+          if (page < totalPage) {
+            page++;
+          } else {
+            hasMoreData = false;
+          }
         }
-        return lst;
+        else{
+          hasMoreData = false;
+        }
       }
-      else{
-        return [];
-      }
+
+      return lst;
     }
     catch(e){
       log("$e");

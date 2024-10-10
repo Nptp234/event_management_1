@@ -15,7 +15,7 @@ class EventModel{
 
   EventModel.fromJson(Map<dynamic, dynamic> e){
     eventId = e[property.eventId].toString();
-    eventCode = e[property.eventCode];
-    eventName = e[property.eventName];
+    eventCode = e[property.eventCode]??"";
+    eventName = e[property.eventName]??"";
   }
 }

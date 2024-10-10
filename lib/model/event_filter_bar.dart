@@ -5,14 +5,9 @@ import 'package:event_management_1/model/const.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class EventFilterBar extends StatefulWidget{
   EventFilterBar({super.key});
-
-  // List<EventModel> lstEvent = [
-  //   EventModel(eventId: '1', eventCode: '123', eventName: 'Sự kiện đầu'),
-  //   EventModel(eventId: '2', eventCode: '122', eventName: 'Sự kiện sau'),
-  //   EventModel(eventId: '3', eventCode: '111', eventName: 'Sự kiện cuối'),
-  // ];
   String? valueDropdown;
 
   @override
@@ -22,6 +17,7 @@ class EventFilterBar extends StatefulWidget{
 class _EventFilterBar extends State<EventFilterBar>{
 
   String? dropdownValue;
+  final String? firstValue = "Chọn sự kiện";
 
   void _updateDropdownValue(String value){
     dropdownValue = value;
@@ -29,7 +25,7 @@ class _EventFilterBar extends State<EventFilterBar>{
 
   @override
   void initState() {
-    dropdownValue=widget.valueDropdown;
+    dropdownValue = widget.valueDropdown;
     super.initState();
   }
 
@@ -39,14 +35,26 @@ class _EventFilterBar extends State<EventFilterBar>{
       builder: (context, value, child) {
         return Container(
           width: getMainWidth(context),
-          height: 50,
-          padding: const EdgeInsets.all(10),
-          child: Row(
+          height: 100,
+          padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10, top: 10),
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Expanded(flex: 0, child: Text("Chọn sự kiện: ", style: TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.bold),),),
-              Expanded(flex: 1, child: _dropdownButton(value))
+              Expanded(
+                flex: 1,
+                child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  padding: const EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 2, color: Colors.grey),
+                    borderRadius: BorderRadius.circular(15)
+                  ),
+                  child: _dropdownButton(value),
+                )
+              )
             ],
           ),
         );
@@ -63,6 +71,8 @@ class _EventFilterBar extends State<EventFilterBar>{
             icon: const Icon(Icons.arrow_downward_rounded, size: 25, color: Colors.grey,),
             elevation: 16,
             isExpanded: true,
+            underline: const SizedBox.shrink(),
+            borderRadius: BorderRadius.circular(20),
             style: const TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
             onChanged: (String? currentValue){
               setState(() {
@@ -78,7 +88,7 @@ class _EventFilterBar extends State<EventFilterBar>{
               (EventModel event){
                 return DropdownMenuItem<String>(
                   value: event.eventName,
-                  child: Flexible(child: Text(event.eventName!, softWrap: true, overflow: TextOverflow.ellipsis,))
+                  child: Flexible(child: Text(event.eventName!, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold), softWrap: true, overflow: TextOverflow.ellipsis, maxLines: 3,))
                 );
               }
             ).toList(), 

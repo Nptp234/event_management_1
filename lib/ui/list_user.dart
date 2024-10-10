@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 
 import 'package:event_management_1/controll/data/fetch_data.dart';
@@ -10,17 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ListUserPage extends StatefulWidget{
-  ListUserPage({super.key});
-
-  // final List<UserModel> lst = [
-  //   UserModel(fullname: 'Phuoc1', phone: '0123456788', email: 'phuoc1@gmail.com', status: 'Checked', cccd: '012345678912', userId: '1', userCode: '0123', eventId: '1'),
-  //   UserModel(fullname: 'Phuoc2', phone: '0123456777', email: 'phuoc2@gmail.com', status: 'Checked', cccd: '012345678912', userId: '1', userCode: '0123', eventId: '2'),
-  //   UserModel(fullname: 'Phuoc3', phone: '0123456666', email: 'phuoc3@gmail.com', status: 'Checked', cccd: '012345678912', userId: '1', userCode: '0123', eventId: '3'),
-  //   UserModel(fullname: 'Phuoc4', phone: '0123455555', email: 'phuo4@gmail.com', status: 'Checked', cccd: '012345678912', userId: '1', userCode: '0123', eventId: '1'),
-  //   UserModel(fullname: 'Phuoc5', phone: '0123444444', email: 'phuoc5@gmail.com', status: 'UnCheck', cccd: '012345678912', userId: '1', userCode: '0123', eventId: '3'),
-  //   UserModel(fullname: 'Phuoc6', phone: '0123333333', email: 'phuoc6@gmail.com', status: 'Checked', cccd: '012345678912', userId: '1', userCode: '0123', eventId: '1'),
-  //   UserModel(fullname: 'Phuoc7', phone: '0122222222', email: 'phuoc7@gmail.com', status: 'UnCheck', cccd: '012345678912', userId: '1', userCode: '0123', eventId: '2'),
-  // ];
+  const ListUserPage({super.key});
 
   @override
   State<ListUserPage> createState() => _ListUserPage();
@@ -34,7 +26,7 @@ class _ListUserPage extends State<ListUserPage>{
       if (!fetchSuccess) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Không thể tải dữ liệu. Vui lòng thử lại.'),
+            content: Text('Không thể tải dữ liệu lúc này. Vui lòng thử lại sau vài giây.'),
             backgroundColor: Colors.red,
           ),
         );
@@ -66,21 +58,24 @@ class _ListUserPage extends State<ListUserPage>{
   }
 
   PreferredSize _header(BuildContext context){
+    
     return PreferredSize(
-      preferredSize: Size.fromHeight(getMainHeight(context)/6), 
-      child: SafeArea(child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SearchBarModel(),
-          const SizedBox(height: 15,),
-          EventFilterBar()
-        ],
-      ))
+      preferredSize: Size.fromHeight(getMainHeight(context)/4.5), 
+      child: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SearchBarModel(),
+            EventFilterBar()
+          ],
+        )
+      )
     );
   }
 
   Widget _body(BuildContext context){
+    
     return RefreshIndicator(
       onRefresh: (){
         return _onRefresh(context);

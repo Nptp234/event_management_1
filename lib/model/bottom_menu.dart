@@ -2,12 +2,11 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:event_management_1/controll/check_connection.dart';
-import 'package:event_management_1/controll/data/async_data.dart';
 import 'package:event_management_1/model/const.dart';
 import 'package:event_management_1/ui/list_user.dart';
 import 'package:event_management_1/ui/qr_view.dart';
 import 'package:event_management_1/ui/statistical_view.dart';
-import 'package:flutter/cupertino.dart';
+// import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:motion_tab_bar/MotionTabBar.dart';
 import 'package:motion_tab_bar/MotionTabBarController.dart';
@@ -60,7 +59,7 @@ class _BottomMenu extends State<BottomMenu> with TickerProviderStateMixin{
     );
     _checkConnect();
     _connectivityService.monitorConnection(context);
-    asyncDataOnlineOnly(context);
+    // asyncDataOnlineOnly(context);
   }
 
   @override
@@ -83,8 +82,8 @@ class _BottomMenu extends State<BottomMenu> with TickerProviderStateMixin{
             });
           },
           children: [
-            ListUserPage(),
-            StatisticalView(),
+            const ListUserPage(),
+            const StatisticalView(),
             QRViewPage(),
           ],
         ),

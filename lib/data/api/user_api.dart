@@ -6,27 +6,22 @@ import 'package:event_management_1/data/api/const.dart';
 import 'package:event_management_1/data/model/user_model.dart';
 import 'package:event_management_1/model/const.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class UserApi{
-
-  // String? key = dotenv.env["PUBLIC_KEY"];
-  // String? baseUrl = "https://api.airtable.com/v0/${dotenv.env['BASE_ID']}/${dotenv.env['USER_TABLE_ID']}";
   
   String? swaggerUrl = "$getSwaggerUrl/users";
   int maxPage = 50;
 
-  Future<List<UserModel>> getFullList() async {
+  Future<List<UserModel>> _getList(Map<dynamic, dynamic> body) async{
     List<UserModel> fullList = [];
-    int page = 1;
+    int page = 1, totalPage = 1;
     bool hasMoreData = true;
 
-    try {
-      while (hasMoreData) {
-        final body = {"query": {}, "page": page, "limit": maxPage, "sort": {}};
-
+    try{
+      while(hasMoreData){
+        body["page"] = page;
         final res = await http.post(
           Uri.parse("$swaggerUrl"),
           headers: {"Content-Type": "application/json"},
@@ -35,25 +30,49 @@ class UserApi{
 
         if (res.statusCode == 200) {
           final data = jsonDecode(res.body);
-          List<UserModel> lst = [];
           var records = data["data"];
           for (var record in records) {
-            lst.add(UserModel.fromJson(record));
+            fullList.add(UserModel.fromJson(record));
           }
 
-          fullList.addAll(lst);
-
-          if (records.length < maxPage) {
-            hasMoreData = false;
+          totalPage = data["metadata"]["totalPages"];
+          if (page < totalPage) {
+            page++;
           } else {
-            page++; 
+            hasMoreData = false;
           }
         } else {
           hasMoreData = false; 
         }
       }
-
       return fullList;
+    }
+    catch(e){
+      log("$e");
+      return [];
+    }
+  }
+
+  Future<List<UserModel>> getFullList() async {
+    List<UserModel> fullList = [];
+    final body = {"query": {}, "page": 1, "limit": maxPage, "sort": {}};
+
+    try {
+      fullList = await _getList(body);
+      return fullList;
+    } catch (e) {
+      log("$e");
+      return [];
+    }
+  }
+
+  Future<List<UserModel>> getListWithEventID(int eventId) async{
+    List<UserModel> lst = [];
+    final body = {"query": {"eventId": eventId}, "page": 1, "limit": maxPage, "sort": {}};
+
+    try {
+      lst = await _getList(body);
+      return lst;
     } catch (e) {
       log("$e");
       return [];

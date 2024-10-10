@@ -52,7 +52,7 @@ import 'package:flutter/material.dart';
   }
 
   void asyncDataOnlineOnly(BuildContext context) {
-    _timer = Timer.periodic(const Duration(minutes: 2), (Timer timer) async{
+    _timer = Timer.periodic(const Duration(minutes: 5), (Timer timer) async{
       bool isConnect = await checkInternetConnection();
       if(isConnect && !isAsyncDataRunning){
         fetchDataOnline(context).then((isSuccess) {

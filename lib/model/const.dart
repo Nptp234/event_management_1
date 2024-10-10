@@ -8,15 +8,15 @@ Color mainColor = const Color(0xFF0060FF);
 
 Color colorState(String state){
   switch(state){
-    case "Checked": return Colors.green;
-    case "UnCheck": return Colors.red;
+    case "Đã duyệt": return Colors.green;
+    case "Chưa duyệt": return Colors.red;
     default: throw Error();
   }
 }
 
 String userState(int i){
   switch (i){
-    case 1: return 'Checked';
-    default: return 'UnCheck';
+    case 1: return 'Đã duyệt';
+    default: return 'Chưa duyệt';
   }
 }

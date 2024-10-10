@@ -43,18 +43,18 @@ class UserModel{
     }
 
     userId = e[userModelProperty.userId].toString();
-    userCode = e[userModelProperty.userCode];
-    fullname = e[userModelProperty.fullname];
-    cccd = e[userModelProperty.cccd];
-    phone = e[userModelProperty.phone];
-    email = e[userModelProperty.email];
+    userCode = e[userModelProperty.userCode]??"";
+    fullname = e[userModelProperty.fullname]??"";
+    cccd = e[userModelProperty.cccd]??"";
+    phone = e[userModelProperty.phone]??"";
+    email = e[userModelProperty.email]??"";
     status = e[userModelProperty.status]==1?userState(1):userState(0);
-    facility = e[userModelProperty.facility];
-    office = e[userModelProperty.office];
-    desciption = e[userModelProperty.desciption];
-    userCreate = e[userModelProperty.userCreate];
-    userUpdate = e[userModelProperty.userUpdate];
-    dateCreate = e[userModelProperty.dateCreate];
-    dateUpdate = e[userModelProperty.dateUpdate];
+    facility = e[userModelProperty.facility]??"";
+    office = e[userModelProperty.office]??"";
+    desciption = e[userModelProperty.desciption]??"";
+    userCreate = e[userModelProperty.userCreate]??"";
+    userUpdate = e[userModelProperty.userUpdate]??"";
+    dateCreate = e[userModelProperty.dateCreate]??"";
+    dateUpdate = e[userModelProperty.dateUpdate]??"";
   }
 }

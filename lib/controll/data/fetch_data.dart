@@ -19,16 +19,66 @@ final EventApi eventApi = EventApi();
 final SQLiteUser sqLiteUser = SQLiteUser();
 final SQLiteEvent sqLiteEvent = SQLiteEvent();
 
+  // Lấy dữ liệu api
+  // Set dữ liệu provider
+  // Set dữ liệu sqlite
+  
+  Future<List<EventModel>> fetchEventDataOnline(BuildContext context) async{
+    try{
+      List<EventModel> lst = [];
+      final eventProvider = Provider.of<ListEventProvider>(context, listen: false);
+      final userProvider = Provider.of<ListUserProvider>(context, listen: false);
+
+      lst = await eventApi.getList();
+      if(lst.isNotEmpty){
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          eventProvider.setList(lst);
+          userProvider.eventIdFilter ?? (userProvider.eventIdFilter = "${eventProvider.lstEvent[0].eventId}");
+          userProvider.eventName ?? (userProvider.eventName = "${eventProvider.lstEvent[0].eventName}");
+        });
+        await sqLiteEvent.setList(lst);
+      }
+
+      return lst;
+    }
+    catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Đã có lỗi xảy ra: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return []; 
+    }
+  }
+
+  Future<List<UserModel>> fetchUserDataOnline(BuildContext context) async{
+    try{
+      List<UserModel> lst = [];
+
+      lst = await userApi.getFullList();
+      await sqLiteUser.setList(lst);
+
+      return lst;
+    }
+    catch(e){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Đã có lỗi xảy ra: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return [];
+    }
+  }
+
   Future<bool> fetchDataOnline(BuildContext context) async {
     try {
-      final userProvider = Provider.of<ListUserProvider>(context, listen: false);
-      final eventProvider = Provider.of<ListEventProvider>(context, listen: false);
-
       final responses = await Future.wait([
-        userApi.getFullList().timeout(const Duration(seconds: 35), onTimeout: () {
+        fetchEventDataOnline(context).timeout(const Duration(seconds: 35), onTimeout: () {
           throw TimeoutException("Thời gian chờ quá lâu. Vui lòng chạy lại app.");
         }),
-        eventApi.getList().timeout(const Duration(seconds: 35), onTimeout: () {
+        fetchUserDataOnline(context).timeout(const Duration(seconds: 35), onTimeout: () {
           throw TimeoutException("Thời gian chờ quá lâu. Vui lòng chạy lại app.");
         }),
       ]);
@@ -37,29 +87,23 @@ final SQLiteEvent sqLiteEvent = SQLiteEvent();
         return false; 
       }
 
-      List<UserModel> lstUser = responses[0] as List<UserModel>;
-      List<EventModel> lstEvent = responses[1] as List<EventModel>;
+      List<EventModel> lstEvent = responses[0] as List<EventModel>;
+      List<UserModel> lstUser = responses[1] as List<UserModel>;
 
+      final eventProvider = Provider.of<ListEventProvider>(context, listen: false);
       if(lstEvent.isEmpty){lstEvent=eventProvider.lstEvent;}
 
-      if (lstUser.isNotEmpty && lstEvent.isNotEmpty) {
-        
+      if(lstUser.isNotEmpty && lstEvent.isNotEmpty){
+        final userProvider = Provider.of<ListUserProvider>(context, listen: false);
         WidgetsBinding.instance.addPostFrameCallback((_) {
           userProvider.setList(lstUser);
           userProvider.filterListEventID(userProvider.eventIdFilter??lstEvent[0].eventId!);
           userProvider.setEventName(userProvider.eventName??lstEvent[0].eventName!);
         });
-        await sqLiteUser.setList(lstUser);
-
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          eventProvider.setList(lstEvent);
-        });
-        await sqLiteEvent.setList(lstEvent);
-
-        return true; 
       }
 
-      return false; 
+      return lstUser.isNotEmpty && lstEvent.isNotEmpty;
+
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

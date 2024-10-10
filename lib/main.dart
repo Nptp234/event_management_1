@@ -3,7 +3,6 @@ import 'package:event_management_1/controll/state/list_user_provide.dart';
 import 'package:event_management_1/controll/state/statistic_provider.dart';
 import 'package:event_management_1/ui/wellcome_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 void main() async{

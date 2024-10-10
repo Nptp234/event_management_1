@@ -36,9 +36,9 @@ class ListUserProvider with ChangeNotifier{
   void _filterUsers() {
     _filteredUsers = _lstUser.where((user) {
       final bool matchesSearch = _searchQuery.isEmpty || _searchQuery=="" ||
-                                user.fullname!.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-                                 user.phone!.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-                                 user.email!.toLowerCase().contains(_searchQuery.toLowerCase());
+                                user.fullname!.toLowerCase().trim().contains(_searchQuery.toLowerCase().trim()) ||
+                                 user.phone!.toLowerCase().trim().contains(_searchQuery.toLowerCase().trim()) ||
+                                 user.email!.toLowerCase().trim().contains(_searchQuery.toLowerCase().trim());
 
       final bool matchesEventId = eventIdFilter == null || user.eventId == eventIdFilter;
 

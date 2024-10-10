@@ -16,9 +16,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
+// ignore: must_be_immutable
 class QRViewPage extends StatefulWidget{
   QRViewPage({super.key});
-  bool isProcessing=false;
 
   @override
   State<QRViewPage> createState() => _QRView();
@@ -34,6 +34,7 @@ class _QRView extends State<QRViewPage>{
   List<UserModel?> lstUser = [];
   UserApi userApi = UserApi();
   bool isUpdating = false;
+  bool isProcessing=false;
 
   Future<void> _requestCameraPermission() async {
     final status = await Permission.camera.status;
@@ -64,9 +65,20 @@ class _QRView extends State<QRViewPage>{
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Họ tên: ${user.fullname}', style: const TextStyle(fontWeight: FontWeight.bold),),
+                        Expanded(
+                          flex: 0,
+                          child: Text('Họ tên: ${user.fullname}', style: const TextStyle(fontWeight: FontWeight.bold), maxLines: 5, overflow: TextOverflow.ellipsis, softWrap: true,),
+                        ),
+                        Expanded(
+                          flex: 0,
+                          child: Text('${user.office}', style: const TextStyle(fontWeight: FontWeight.bold), maxLines: 3, overflow: TextOverflow.ellipsis, softWrap: true),
+                        ),
                         const SizedBox(height: 7),
-                        Text('Số điện thoại: ${user.phone}', style: const TextStyle(fontWeight: FontWeight.bold),),
+                        Text('Email: ${user.email}', style: const TextStyle(fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: true),
+                        const SizedBox(height: 7),
+                        Text('SDT: ${user.phone}', style: const TextStyle(fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: true),
+                        const SizedBox(height: 7),
+                        
                       ],
                     ),
                     actions: [
@@ -102,7 +114,7 @@ class _QRView extends State<QRViewPage>{
                             ),
                           );
                           isUpdating = false;
-                          widget.isProcessing = false;
+                          isProcessing = false;
                           controller?.resumeCamera();
                           Navigator.of(context).pop();
                         },
@@ -134,9 +146,8 @@ class _QRView extends State<QRViewPage>{
   
 
   Future<void> _validateQRCode(String? qrCode, BuildContext context) async {
-    if (widget.isProcessing==true) return;
+    if (isProcessing==true) return;
 
-    widget.isProcessing = true;
     controller?.pauseCamera();
 
     await Future.delayed(const Duration(seconds: 1));
@@ -149,14 +160,16 @@ class _QRView extends State<QRViewPage>{
         ),
       );
       controller?.resumeCamera();
+      isProcessing = false;
     } 
     else {
-      final users = lstUser.where((user) => user!.fullname!.trim().contains(qrCode.trim())).toList();
+      final users = lstUser.where((user) => user!.fullname!.toLowerCase().trim()==qrCode.toLowerCase().trim()).toList();
 
       if (users.isNotEmpty) {
         UserModel user = users.first!;
         if(!isUpdating){
           await showDialogUpdate(user, context);
+          isProcessing = false;
         }
         
       } else {
@@ -167,6 +180,7 @@ class _QRView extends State<QRViewPage>{
           ),
         );
         controller?.resumeCamera();
+        isProcessing = false;
       }
     }
   }
@@ -206,7 +220,7 @@ class _QRView extends State<QRViewPage>{
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
       log("${scanData.code}");
-      if (!widget.isProcessing) {
+      if (!isProcessing) {
         _validateQRCode(scanData.code, context);
       }
     });
