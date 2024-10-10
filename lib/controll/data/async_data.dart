@@ -21,6 +21,49 @@ import 'package:flutter/material.dart';
   Timer? _timer;
   bool isAsyncDataRunning = false;
 
+  Future<bool> _processBatchUpdate(List<HistoryModel> batch, BuildContext context) async {
+    bool batchUpdateSuccess = true;
+    for (var history in batch) {
+      try {
+        bool updateSuccess = await userApi.updateStatusUser(history.userId!, history.newStatus!, context);
+        if (!updateSuccess) {
+          batchUpdateSuccess = false;
+        }
+        else{
+          await sqLiteHistory.deleteHistory(history.historyId!);
+        }
+        await Future.delayed(const Duration(seconds: 1));
+      } catch (e) {
+        log("$e");
+        batchUpdateSuccess = false;
+      }
+    }
+    return batchUpdateSuccess;
+  }
+
+  Future<bool> _asynBatchData(BuildContext context , List<HistoryModel> lstHistory) async{
+    try{
+      int batchSize = 5;
+      bool isUpdate = false;
+
+      // Sắp xếp thời gian cũ nhất tới mới nhất
+      List<HistoryModel> _sortedList = List.from(lstHistory)
+        ..sort((a, b) => DateTime.parse(a.dateCreated!).compareTo(DateTime.parse(b.dateCreated!)));
+
+      for(int i=0;i<batchSize;i++){
+        final batch = _sortedList.sublist(i, (i + batchSize) > _sortedList.length ? _sortedList.length : (i + batchSize));
+        bool batchUpdateSuccess = await _processBatchUpdate(batch, context);
+        isUpdate = batchUpdateSuccess;
+        await Future.delayed(const Duration(seconds: 3));
+      }
+      return isUpdate;
+    }
+    catch(e){
+      log("$e");
+      return false;
+    }
+  }
+
   Future<bool> asyncData(BuildContext context) async{
     try{
       isAsyncDataRunning = true;
@@ -29,11 +72,7 @@ import 'package:flutter/material.dart';
           List<HistoryModel> lstHistory = await sqLiteHistory.getList();
           bool isUpdate = false;
 
-          for (var history in lstHistory) {
-            bool updateSuccess = await userApi.updateStatusUser(history.userId!, history.newStatus!, context);
-            isUpdate = updateSuccess;
-            await Future.delayed(const Duration(seconds: 3));
-          }
+          isUpdate = await _asynBatchData(context, lstHistory);
 
           if (isUpdate || lstHistory.isEmpty) {
             bool fetchSuccess = await fetchData(context);

@@ -56,4 +56,14 @@ class SQLiteHistory{
       log("$e");
     }
   }
+
+  Future<void> deleteHistory(String id) async{
+    try{
+      final db = await _sqlite.database;
+      await db.rawQuery("delete from history where ${property.historyId}=?", [id]);
+    }
+    catch(e){
+      log("$e");
+    }
+  }
 }

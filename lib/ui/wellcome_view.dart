@@ -16,6 +16,28 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
+
+  void _showRedoApp(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // User cannot dismiss the dialog by tapping outside
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Lấy dữ liệu gặp vấn đề!", style: TextStyle(fontWeight: FontWeight.bold),),
+          content: const Text("Không thể lấy dữ liệu. Bạn có muốn chúng tôi khởi động lại app không?", style: TextStyle(fontWeight: FontWeight.bold),),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Đồng ý", style: TextStyle(color: mainColor, fontWeight: FontWeight.bold),),
+              onPressed: () async {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const WelcomeScreen()));
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -30,13 +52,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           ),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Không thể tải dữ liệu. Vui lòng thử lại.'),
-            backgroundColor: Colors.red,
-            padding: EdgeInsets.only(bottom: 50),
-          ),
-        );
+        _showRedoApp(context);
       }
     });
   }
